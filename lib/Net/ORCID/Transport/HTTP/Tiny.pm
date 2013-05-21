@@ -1,10 +1,10 @@
-package Net::ORCID::Transport::LWP;
+package Net::ORCID::Transport::HTTP::Tiny;
 
 use strict;
 use warnings;
 use namespace::clean;
 use Moo;
-use LWP::UserAgent ();
+use HTTP::Tiny;
 
 with 'Net::ORCID::Transport';
 
@@ -16,7 +16,7 @@ has _client => (
 );
 
 sub _build_client {
-    LWP::UserAgent->new;
+    HTTP::Tiny->new;
 }
 
 sub get {
@@ -24,20 +24,20 @@ sub get {
     if ($params) {
         $url = $self->_param_url($url, $params);
     }
-    my $res = $self->_client->get($url, %$headers);
-    $res->content;
+    my $res = $self->_client->get($url, {headers => $headers});
+    $res->{content};
 }
 
 sub post_form {
     my ($self, $url, $form, $headers) = @_;
-    my $res = $self->_client->post($url, $form, %$headers);
-    $res->content;
+    my $res = $self->_client->post_form($url, $form, {headers => $headers});
+    $res->{content};
 }
 
 sub post {
     my ($self, $url, $body, $headers) = @_;
-    my $res = $self->_client->post($url, %$headers, Content => $body);
-    $res->content;
+    my $res = $self->_client->post($url, {content => $body, headers => $headers});
+    $res->{content};
 }
 
 1;
