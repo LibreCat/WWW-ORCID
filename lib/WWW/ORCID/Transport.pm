@@ -10,6 +10,8 @@ requires 'get';
 requires 'post_form';
 requires 'post';
 
+has debug => (is => 'ro');
+
 sub _param_url {
     my ($self, $url, $params) = @_;
     $url = URI->new($url);

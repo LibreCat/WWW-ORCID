@@ -25,23 +25,28 @@ sub get {
         $url = $self->_param_url($url, $params);
     }
     my $res = $self->_client->get($url, %$headers);
-    $res->content;
+    $res->code, $self->_get_headers($res), $res->content;
 }
 
 sub post_form {
     my ($self, $url, $form, $headers) = @_;
     my $res = $self->_client->post($url, $form, %$headers);
-    $res->content;
+    $res->code, $self->_get_headers($res), $res->content;
 }
 
 sub post {
     my ($self, $url, $body, $headers) = @_;
     my $res = $self->_client->post($url, %$headers, Content => $body);
-    my $res_headers = {};
-    for my $key ($res->header_field_names) {
-        $res_headers->{$key} = $res->header($key);
+    $res->code, $self->_get_headers($res), $res->content;
+}
+
+sub _get_headers {
+    my ($self, $msg) = @_;
+    my $headers = {};
+    for my $key ($msg->header_field_names) {
+        $headers->{lc $key} = $msg->header($key);
     }
-    $res->content, $res_headers;
+    $headers;
 }
 
 1;

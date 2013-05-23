@@ -18,29 +18,33 @@ sub _build_url {
 sub get_profile {
     my ($self, $orcid) = @_;
     my $url = $self->url;
-    my $res = $self->_t->get("$url/$orcid/orcid-profile", undef, {'Accept' => 'application/orcid+json'});
-    decode_json($res);
+    my ($res_code, $res_headers, $res_body) =
+        $self->_t->get("$url/$orcid/orcid-profile", undef, {'Accept' => 'application/orcid+json'});
+    decode_json($res_body);
 }
 
 sub get_bio {
     my ($self, $orcid) = @_;
     my $url = $self->url;
-    my $res = $self->_t->get("$url/$orcid/orcid-bio", undef, {'Accept' => 'application/orcid+json'});
-    decode_json($res);
+    my ($res_code, $res_headers, $res_body) =
+        $self->_t->get("$url/$orcid/orcid-bio", undef, {'Accept' => 'application/orcid+json'});
+    decode_json($res_body);
 }
 
 sub get_works {
     my ($self, $orcid) = @_;
     my $url = $self->url;
-    my $res = $self->_t->get("$url/$orcid/orcid-works", undef, {'Accept' => 'application/orcid+json'});
-    decode_json($res);
+    my ($res_code, $res_headers, $res_body) =
+        $self->_t->get("$url/$orcid/orcid-works", undef, {'Accept' => 'application/orcid+json'});
+    decode_json($res_body);
 }
 
 sub search_bio {
     my ($self, $params) = @_;
     my $url = $self->url;
-    my $res = $self->_t->get("$url/search/orcid-bio", $params, {'Accept' => 'application/orcid+json'});
-    decode_json($res);
+    my ($res_code, $res_headers, $res_body) =
+        $self->_t->get("$url/search/orcid-bio", $params, {'Accept' => 'application/orcid+json'});
+    decode_json($res_body);
 }
 
 1;

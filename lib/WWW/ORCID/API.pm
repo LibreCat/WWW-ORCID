@@ -29,8 +29,9 @@ sub new_access_token {
         grant_type => 'client_credentials',
         scope => $scope,
     };
-    my $res = $self->_t->post_form("$url/oauth/token", $form, $headers);
-    decode_json($res);
+    my ($res_code, $res_headers, $res_body) =
+        $self->_t->post_form("$url/oauth/token", $form, $headers);
+    decode_json($res_body);
 }
 
 sub get_profile {
@@ -40,8 +41,9 @@ sub get_profile {
         'Accept' => 'application/orcid+json',
         'Authorization' => "Bearer $access_token",
     };
-    my $res = $self->_t->get("$url/$orcid/orcid-profile", undef, $headers);
-    decode_json($res);
+    my ($res_code, $res_headers, $res_body) =
+        $self->_t->get("$url/$orcid/orcid-profile", undef, $headers);
+    decode_json($res_body);
 }
 
 sub get_bio {
@@ -51,8 +53,9 @@ sub get_bio {
         'Accept' => 'application/orcid+json',
         'Authorization' => "Bearer $access_token",
     };
-    my $res = $self->_t->get("$url/$orcid/orcid-bio", undef, $headers);
-    decode_json($res);
+    my ($res_code, $res_headers, $res_body) =
+        $self->_t->get("$url/$orcid/orcid-bio", undef, $headers);
+    decode_json($res_body);
 }
 
 sub get_works {
@@ -62,8 +65,9 @@ sub get_works {
         'Accept' => 'application/orcid+json',
         'Authorization' => "Bearer $access_token",
     };
-    my $res = $self->_t->get("$url/$orcid/orcid-works", undef, $headers);
-    decode_json($res);
+    my ($res_code, $res_headers, $res_body) =
+        $self->_t->get("$url/$orcid/orcid-works", undef, $headers);
+    decode_json($res_body);
 }
 
 sub search_bio {
@@ -73,8 +77,9 @@ sub search_bio {
         'Accept' => 'application/orcid+json',
         'Authorization' => "Bearer $access_token",
     };
-    my $res = $self->_t->get("$url/search/orcid-bio", $params, $headers);
-    decode_json($res);
+    my ($res_code, $res_headers, $res_body) =
+        $self->_t->get("$url/search/orcid-bio", $params, $headers);
+    decode_json($res_body);
 }
 
 sub new_profile {
@@ -178,13 +183,9 @@ sub new_profile {
     $xml->endTag('orcid-message');
     $xml->end;
 
-    if ($self->debug) {
-        print STDERR $xml->to_string;
-    }
-
-    my ($res_body, $res_headers) =
+    my ($res_code, $res_headers, $res_body) =
         $self->_t->post("$url/orcid-profile", $xml->to_string, $headers);
-    my $location = $res_headers->{Location};
+    my $location = $res_headers->{location};
     my ($orcid) = $location =~ m!([^/]+)/orcid-profile$!;
     $orcid;
 }

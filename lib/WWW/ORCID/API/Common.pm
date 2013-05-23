@@ -44,7 +44,7 @@ sub _build_t {
     my $transport = $self->transport;
     my $transport_class = "WWW::ORCID::Transport::${transport}";
     load $transport_class;
-    $transport_class->new;
+    $transport_class->new(debug => $self->debug);
 }
 
 1;
