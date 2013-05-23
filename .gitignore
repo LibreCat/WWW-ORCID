@@ -10,5 +10,5 @@ Makefile.PL
 MANIFEST*
 META.*
 MYMETA.*
-Net-ORCID-*
+WWW-ORCID-*
 !*.t

@@ -3,7 +3,7 @@ use warnings;
 use Module::Build;
 
 my $build = Module::Build->new(
-    module_name => 'Net::ORCID',
+    module_name => 'WWW::ORCID',
     license => 'perl',
     dist_author => [
         'Nicolas Steenlant <nicolas.steenlant@ugent.be>',
@@ -25,7 +25,7 @@ my $build = Module::Build->new(
         'JSON::XS' => '2.3',
     },
     add_to_cleanup => [qw(
-        Net-ORCID-*
+        WWW-ORCID-*
     )],
     create_makefile_pl => 'traditional',
     create_license => 1,
