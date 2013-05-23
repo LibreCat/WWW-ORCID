@@ -146,6 +146,32 @@ sub new_profile {
         }
         $xml->endTag('keywords');
     }
+    if ($profile->{works}) {
+        $xml->startTag('orcid-activities');
+        $xml->startTag('orcid-works');
+        for my $work (@{$profile->{works}}) {
+            if ($work->{visibility}) {
+                $xml->startTag('orcid-work', visibility => $work->{visibility});
+            } else {
+                $xml->startTag('orcid-work');
+            }
+            $xml->startTag('work-title');
+            $xml->dataElement('title', $work->{title});
+            if ($work->{subtitle}) {
+                $xml->dataElement('subtitle', $work->{subtitle});
+            }
+            $xml->endTag('work-title');
+            if ($work->{short_description}) {
+                $xml->dataElement('short-description', $work->{short_description});
+            }
+            if ($work->{type}) {
+                $xml->dataElement('work-type', $work->{type});
+            }
+            $xml->endTag('orcid-work');
+        }
+        $xml->endTag('orcid-works');
+        $xml->endTag('orcid-activities');
+    }
     $xml->endTag('orcid-profile');
     $xml->endTag('orcid-message');
     $xml->end;
