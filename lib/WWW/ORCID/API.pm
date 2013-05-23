@@ -153,8 +153,8 @@ sub new_profile {
         $xml->endTag('keywords');
     }
     $xml->endTag('orcid-bio');
+    $xml->startTag('orcid-activities');
     if ($profile->{works}) {
-        $xml->startTag('orcid-activities');
         $xml->startTag('orcid-works');
         for my $work (@{$profile->{works}}) {
             if ($work->{visibility}) {
@@ -177,11 +177,15 @@ sub new_profile {
             $xml->endTag('orcid-work');
         }
         $xml->endTag('orcid-works');
-        $xml->endTag('orcid-activities');
     }
+    $xml->endTag('orcid-activities');
     $xml->endTag('orcid-profile');
     $xml->endTag('orcid-message');
     $xml->end;
+
+    if ($self->debug) {
+        print STDERR $xml->to_string."\n";
+    }
 
     my ($res_code, $res_headers, $res_body) =
         $self->_t->post("$url/orcid-profile", $xml->to_string, $headers);

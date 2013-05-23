@@ -6,7 +6,9 @@ my $build = Module::Build->new(
     module_name => 'WWW::ORCID',
     license => 'perl',
     dist_author => [
+        'Patrick Hochstenbach <patrick.hochstenbach@ugent.be>',
         'Nicolas Steenlant <nicolas.steenlant@ugent.be>',
+        'Simeon Warner <simeon.warner@cornell.edu>',
     ],
     build_requires => {
         'Software::License' => 0,
