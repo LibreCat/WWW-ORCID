@@ -12,7 +12,7 @@ with 'WWW::ORCID::API::Common';
 
 sub _build_url {
     my ($self) = @_;
-    $self->sandbox ? 'http://api.sandbox-1.orcid.org'
+    $self->sandbox ? 'http://api.sandbox.orcid.org'
                    : 'http://api.orcid.org';
 }
 

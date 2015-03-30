@@ -22,7 +22,6 @@ our $VERSION = 0.0101;
 use WWW::ORCID::API::Pub ();
 use WWW::ORCID::API ();
 
-
 =head1 SEE ALSO
 
 L<http://orcid.org>
