@@ -3,6 +3,7 @@ Revision history for Catmandu-Store-CouchDB
 {{$NEXT}}
   - switch to Dist::Milla
   - update default sandbox uri
+  - update message version to 1.1
 
 0.0101  2013-05-23
   - update contributors
