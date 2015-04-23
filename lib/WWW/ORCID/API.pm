@@ -17,18 +17,20 @@ sub _build_url {
 }
 
 sub new_access_token {
-    my ($self, $client_id, $client_secret, $scope) = @_;
-    if (!defined $scope) { $scope = '/read-public' }
-    elsif ($scope eq ':read-public')    { $scope = '/read-public' }
-    elsif ($scope eq ':create-profile') { $scope = '/orcid-profile/create' }
+    my ($self, $client_id, $client_secret, %opts) = @_;
+
+    my $grant_type = $opts{grant_type};
+    if (!defined $grant_type) { $grant_type = 'client_credentials' }
+
     my $url = $self->url;
     my $headers = {'Accept' => 'application/json'};
     my $form = {
         client_id => $client_id,
         client_secret => $client_secret,
-        grant_type => 'client_credentials',
-        scope => $scope,
+        grant_type => $grant_type,
     };
+    $form->{scope} = $opts{scope} if defined $opts{scope};
+    $form->{code}  = $opts{code}  if defined $opts{code};
     my ($res_code, $res_headers, $res_body) =
         $self->_t->post_form("$url/oauth/token", $form, $headers);
     decode_json($res_body);
