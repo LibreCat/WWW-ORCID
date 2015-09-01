@@ -155,57 +155,60 @@ sub new_profile {
         $xml->endTag('keywords');
     }
     $xml->endTag('orcid-bio');
-    $xml->startTag('orcid-activities');
-    if ($profile->{works} && @{$profile->{works}}) {
-        $xml->startTag('orcid-works');
-        for my $work (@{$profile->{works}}) {
-            if ($work->{visibility}) {
-                $xml->startTag('orcid-work', visibility => $work->{visibility});
-            } else {
-                $xml->startTag('orcid-work');
+    if (($profile->{works} && @{$profile->{works}}) || 
+            ($profile->{affiliations} && @{$profile->{affiliations}})) {
+        $xml->startTag('orcid-activities');
+        if ($profile->{works} && @{$profile->{works}}) {
+            $xml->startTag('orcid-works');
+            for my $work (@{$profile->{works}}) {
+                if ($work->{visibility}) {
+                    $xml->startTag('orcid-work', visibility => $work->{visibility});
+                } else {
+                    $xml->startTag('orcid-work');
+                }
+                $xml->startTag('work-title');
+                $xml->dataElement('title', $work->{title});
+                if ($work->{subtitle}) {
+                    $xml->dataElement('subtitle', $work->{subtitle});
+                }
+                $xml->endTag('work-title');
+                if ($work->{short_description}) {
+                    $xml->dataElement('short-description', $work->{short_description});
+                }
+                if ($work->{type}) {
+                    $xml->dataElement('work-type', $work->{type});
+                }
+                $xml->endTag('orcid-work');
             }
-            $xml->startTag('work-title');
-            $xml->dataElement('title', $work->{title});
-            if ($work->{subtitle}) {
-                $xml->dataElement('subtitle', $work->{subtitle});
-            }
-            $xml->endTag('work-title');
-            if ($work->{short_description}) {
-                $xml->dataElement('short-description', $work->{short_description});
-            }
-            if ($work->{type}) {
-                $xml->dataElement('work-type', $work->{type});
-            }
-            $xml->endTag('orcid-work');
+            $xml->endTag('orcid-works');
         }
-        $xml->endTag('orcid-works');
-    }
-    if ($profile->{affiliations} && @{$profile->{affiliations}}) {
-        $xml->startTag('affiliations');
-        for my $aff (@{$profile->{affiliations}}) {
-            $xml->dataElement('type', $aff->{type});
-            if ($aff->{department_name}) {
-                $xml->dataElement('department-name', $aff->{department_name});
+        if ($profile->{affiliations} && @{$profile->{affiliations}}) {
+            $xml->startTag('affiliations');
+            for my $aff (@{$profile->{affiliations}}) {
+                $xml->dataElement('type', $aff->{type});
+                if ($aff->{department_name}) {
+                    $xml->dataElement('department-name', $aff->{department_name});
+                }
+                if ($aff->{role_title}) {
+                    $xml->dataElement('role-title', $aff->{role_title});
+                }
+                # TODO start-date
+                $xml->startTag('organization');
+                $xml->dataElement('name', $aff->{name});
+                if (my $addr = $aff->{address}) {
+                    $xml->startTag('address');
+                    $xml->dataElement('city', $addr->{city});
+                    $xml->dataElement('region', $addr->{region}) if exists $addr->{region};
+                    $xml->dataElement('country', $addr->{country});
+                    $xml->endTag('address')
+                }
+                # TODO disambiguated-organization
+                $xml->endTag('organization');
             }
-            if ($aff->{role_title}) {
-                $xml->dataElement('role-title', $aff->{role_title});
-            }
-            # TODO start-date
-            $xml->startTag('organization');
-            $xml->dataElement('name', $aff->{name});
-            if (my $addr = $aff->{address}) {
-                $xml->startTag('address');
-                $xml->dataElement('city', $addr->{city});
-                $xml->dataElement('region', $addr->{region}) if exists $addr->{region};
-                $xml->dataElement('country', $addr->{country});
-                $xml->endTag('address')
-            }
-            # TODO disambiguated-organization
-            $xml->endTag('organization');
+            $xml->endTag('affiliations');
         }
-        $xml->endTag('affiliations');
+        $xml->endTag('orcid-activities');
     }
-    $xml->endTag('orcid-activities');
     $xml->endTag('orcid-profile');
     $xml->endTag('orcid-message');
     $xml->end;
