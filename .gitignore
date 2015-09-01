@@ -12,3 +12,5 @@ META.*
 MYMETA.*
 WWW-ORCID-*
 !*.t
+cpanfile.snapshot
+local
