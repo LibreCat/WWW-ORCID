@@ -1,7 +1,8 @@
 Revision history for WWW-ORCID
 
 {{$NEXT}}
-  - Adding documentation
+  - more pod
+  - mote tests
 
 0.0102  2015-04-22 14:00:20 CEST
   - switch to Dist::Milla
