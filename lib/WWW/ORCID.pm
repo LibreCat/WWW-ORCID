@@ -56,7 +56,7 @@ Version 0.0101
 
 =cut
 
-our $VERSION = 0.0102;
+our $VERSION = 0.02;
 
 use WWW::ORCID::API::Pub ();
 use WWW::ORCID::API ();

@@ -1,6 +1,8 @@
 Revision history for WWW-ORCID
 
 {{$NEXT}}
+
+0.02  2015-09-01 14:22:11 CEST
   - more pod
   - mote tests
 
