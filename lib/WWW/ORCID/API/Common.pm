@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::clean;
 
-use Class::Load qw( try_load_class );
+use Class::Load qw(try_load_class);
 use Moo::Role;
 
 requires '_build_url';
@@ -37,14 +37,14 @@ has _t => (
 );
 
 sub _build_transport {
-    return 'LWP';
+    'LWP';
 }
 
 sub _build_t {
     my ($self) = @_;
     my $transport = $self->transport;
     my $transport_class = "WWW::ORCID::Transport::${transport}";
-    try_load_class $transport_class
+    try_load_class($transport_class)
       or croak("Could not load $transport_class: $!");
     $transport_class->new(debug => $self->debug);
 }

@@ -50,10 +50,6 @@ WWW::ORCID - Module to interface with the ORCID webservice
 
 Module to interface with the ORCID webservice.
 
-=head1 VERSION
-
-Version 0.0101
-
 =cut
 
 our $VERSION = 0.02;
