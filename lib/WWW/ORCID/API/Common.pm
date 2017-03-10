@@ -3,7 +3,8 @@ package WWW::ORCID::API::Common;
 use strict;
 use warnings;
 use namespace::clean;
-use Module::Load qw(load);
+
+use Class::Load qw(try_load_class);
 use Moo::Role;
 
 requires '_build_url';
@@ -43,7 +44,8 @@ sub _build_t {
     my ($self) = @_;
     my $transport = $self->transport;
     my $transport_class = "WWW::ORCID::Transport::${transport}";
-    load $transport_class;
+    try_load_class($transport_class)
+      or croak("Could not load $transport_class: $!");
     $transport_class->new(debug => $self->debug);
 }
 

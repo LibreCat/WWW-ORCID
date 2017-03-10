@@ -45,10 +45,6 @@ WWW::ORCID - Module to interface with the ORCID webservice
 
 Module to interface with the ORCID webservice.
 
-# VERSION
-
-Version 0.0101
-
 # SEE ALSO
 
 [http://members.orcid.org/api](http://members.orcid.org/api)
