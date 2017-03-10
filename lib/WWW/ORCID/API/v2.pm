@@ -275,25 +275,31 @@ sub delete_works {
 }
 
 sub _create_works_xml {
-    my ($self, $works) = @_;
+    my ($self, $work) = @_;
 
     my $xml = XML::Writer->new(OUTPUT => 'self', ENCODING => 'UTF-8');
     $xml->xmlDecl;
 
-    foreach my $w (@$works) {
-        $xml->startTag('work:work',
-          'xmlns:common' => "http://www.orcid.org/ns/common",
-          'xmlns:work' => "http://www.orcid.org/ns/work",
-          'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
-          'xsi:schemaLocation' => "http://www.orcid.org/ns/work /work-2.0.xsd ",
-        );
+    $xml->startTag('work:work',
+        'xmlns:common' => "http://www.orcid.org/ns/common",
+        'xmlns:work' => "http://www.orcid.org/ns/work",
+        'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
+        'xsi:schemaLocation' => "http://www.orcid.org/ns/work /work-2.0.xsd ",
+    );
 
-        $xml->startTag('work:title');
-        $xml->dataElement('common:title', $w->title);
-        $xml->endTag('work:title');
-        $xml->dataElement('work:type', $w->type);
-        # and so on ....
-    }
+    $xml->startTag('work:title');
+    $xml->dataElement('common:title', $work->{title});
+    $xml->endTag('work:title');
+    $xml->dataElement('work:type', $work->{type});
+    $xml->startTag('common:external-ids');
+    $xml->startTag('common:external-id');
+    $xml->dataElement('common:external-id-type', 'doi');
+    $xml->dataElement('common:external-id-value', $work->{doi});
+    $xml->dataElement('common:external-id-url', 'https://doi.org/' . $work->{doi});
+    $xml->dataElement('common:external-id-relationship', 'self');
+    $xml->endTag('common:external-ids');
+    $xml->endTag('common:external-id');
+    $xml->endTag('work:work');
 
     return $xml->to_string;
 }
