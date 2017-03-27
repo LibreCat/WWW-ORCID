@@ -6,6 +6,7 @@ use warnings;
 our $VERSION = 0.02;
 
 use Class::Load qw(try_load_class);
+use Carp;
 use Moo::Role;
 use namespace::clean;
 

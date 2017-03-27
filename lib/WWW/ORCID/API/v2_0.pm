@@ -13,17 +13,25 @@ use namespace::clean;
 
 with 'WWW::ORCID::API';
 
+my @SCOPES = qw(
+    /activities/update
+    /authenticate
+    /person/update
+    /read-limited
+    /read-public
+    /webhook
+);
+
 sub _build_url {
     my ($self) = @_;
-    $self->sandbox ? 'http://api.sandbox.orcid.org/v2.0'
-                   : 'http://api.orcid.org';
+    $self->sandbox ? 'https://api.sandbox.orcid.org/v2.0'
+                   : 'https://api.orcid.org/v2.0';
 }
 
 sub new_access_token {
     my ($self, $client_id, $client_secret, %opts) = @_;
 
-    my $grant_type = $opts{grant_type};
-    if (!defined $grant_type) { $grant_type = 'client_credentials' }
+    my $grant_type = defined $opts{grant_type} ? $opts{grant_type} : 'client_credentials';
 
     my $url = $self->url;
     my $headers = {'Accept' => 'application/json'};
@@ -40,11 +48,12 @@ sub new_access_token {
 }
 
 sub get_profile {
-    my ($self, $access_token, $orcid) = @_;
+    my ($self, $token, $orcid) = @_;
     my $url = $self->url;
+    $token = $token->{access_token} if ref $token;
     my $headers = {
         'Accept' => 'application/orcid+json',
-        'Authorization' => "Bearer $access_token",
+        'Authorization' => "Bearer $token",
     };
     my ($res_code, $res_headers, $res_body) =
         $self->_t->get("$url/$orcid/orcid-profile", undef, $headers);
@@ -52,11 +61,12 @@ sub get_profile {
 }
 
 sub get_bio {
-    my ($self, $access_token, $orcid) = @_;
+    my ($self, $token, $orcid) = @_;
     my $url = $self->url;
+    $token = $token->{access_token} if ref $token;
     my $headers = {
         'Accept' => 'application/orcid+json',
-        'Authorization' => "Bearer $access_token",
+        'Authorization' => "Bearer $token",
     };
     my ($res_code, $res_headers, $res_body) =
         $self->_t->get("$url/$orcid/orcid-bio", undef, $headers);
@@ -64,11 +74,12 @@ sub get_bio {
 }
 
 sub get_works {
-    my ($self, $access_token, $orcid) = @_;
+    my ($self, $token, $orcid) = @_;
     my $url = $self->url;
+    $token = $token->{access_token} if ref $token;
     my $headers = {
         'Accept' => 'application/orcid+json',
-        'Authorization' => "Bearer $access_token",
+        'Authorization' => "Bearer $token",
     };
     my ($res_code, $res_headers, $res_body) =
         $self->_t->get("$url/$orcid/orcid-works", undef, $headers);
@@ -76,11 +87,12 @@ sub get_works {
 }
 
 sub search_bio {
-    my ($self, $access_token, $params) = @_;
+    my ($self, $token, $params) = @_;
     my $url = $self->url;
+    $token = $token->{access_token} if ref $token;
     my $headers = {
         'Accept' => 'application/orcid+json',
-        'Authorization' => "Bearer $access_token",
+        'Authorization' => "Bearer $token",
     };
     my ($res_code, $res_headers, $res_body) =
         $self->_t->get("$url/search/orcid-bio", $params, $headers);
@@ -88,12 +100,13 @@ sub search_bio {
 }
 
 sub new_profile {
-    my ($self, $access_token, $profile) = @_;
+    my ($self, $token, $profile) = @_;
     my $url = $self->url;
+    $token = $token->{access_token} if ref $token;
     my $headers = {
         'Accept' => 'application/xml',
         'Content-Type' => 'application/vdn.orcid+xml',
-        'Authorization' => "Bearer $access_token",
+        'Authorization' => "Bearer $token",
     };
 
     my $xml = XML::Writer->new(OUTPUT => 'self', ENCODING => 'UTF-8');
@@ -228,13 +241,13 @@ sub new_profile {
 }
 
 sub add_works {
-    my ($self, $access_token, $orcid, $work) = @_;
-
+    my ($self, $token, $orcid, $work) = @_;
     my $url = $self->url;
+    $token = $token->{access_token} if ref $token;
     my $headers = {
         'Accept' => 'application/xml',
         'Content-Type' => 'application/vdn.orcid+xml',
-        'Authorization' => "Bearer $access_token",
+        'Authorization' => "Bearer $token",
     };
 
     my $req_body = $self->_create_works_xml($work);
@@ -245,13 +258,13 @@ sub add_works {
 }
 
 sub update_works {
-    my ($self, $access_token, $orcid, $work, $put_code) = @_;
-
+    my ($self, $token, $orcid, $work, $put_code) = @_;
     my $url = $self->url;
+    $token = $token->{access_token} if ref $token;
     my $headers = {
         'Accept' => 'application/xml',
         'Content-Type' => 'application/vdn.orcid+xml',
-        'Authorization' => "Bearer $access_token",
+        'Authorization' => "Bearer $token",
     };
 
     my $req_body = $self->_create_works_xml($work);
@@ -263,13 +276,13 @@ sub update_works {
 }
 
 sub delete_works {
-    my ($self, $access_token, $orcid, $put_code) = @_;
-
+    my ($self, $token, $orcid, $put_code) = @_;
     my $url = $self->url;
+    $token = $token->{access_token} if ref $token;
     my $headers = {
         'Accept' => 'application/xml',
         'Content-Type' => 'application/vdn.orcid+xml',
-        'Authorization' => "Bearer $access_token",
+        'Authorization' => "Bearer $token",
     };
 
     my ($res_code, $res_headers, $res_body) =

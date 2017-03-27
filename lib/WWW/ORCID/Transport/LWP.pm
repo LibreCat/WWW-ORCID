@@ -28,12 +28,20 @@ sub get {
         $url = $self->_param_url($url, $params);
     }
     my $res = $self->_client->get($url, %$headers);
+    if ($self->debug) {
+        use Data::Dumper;
+        print STDERR Dumper($res)."\n";
+    }
     $res->code, $self->_get_headers($res), $res->content;
 }
 
 sub post_form {
     my ($self, $url, $form, $headers) = @_;
     my $res = $self->_client->post($url, $form, %$headers);
+    if ($self->debug) {
+        use Data::Dumper;
+        print STDERR Dumper($res)."\n";
+    }
     $res->code, $self->_get_headers($res), $res->content;
 }
 
