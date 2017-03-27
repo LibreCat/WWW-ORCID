@@ -6,7 +6,7 @@ WWW::ORCID - Module to interface with the ORCID webservice
 
     use WWW::ORCID;
 
-    my $orcid   = WWW::ORCID::API::Pub->new;
+    my $orcid   = WWW::ORCID->new(version => '1.0');
     my $id      = '0000-0001-8390-6171';
 
     my $profile = $orcid->get_profile($id);
