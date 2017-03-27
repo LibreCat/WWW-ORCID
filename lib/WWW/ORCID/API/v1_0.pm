@@ -1,18 +1,21 @@
-package WWW::ORCID::API::v2;
+package WWW::ORCID::API::v1_0;
 
 use strict;
 use warnings;
-use namespace::clean;
+
+our $VERSION = 0.02;
+
 use utf8;
 use JSON qw(decode_json);
 use XML::Writer;
 use Moo;
+use namespace::clean;
 
-with 'WWW::ORCID::API::Common';
+with 'WWW::ORCID::API';
 
 sub _build_url {
     my ($self) = @_;
-    $self->sandbox ? 'http://api.sandbox.orcid.org/v2.0'
+    $self->sandbox ? 'http://api.sandbox.orcid.org'
                    : 'http://api.orcid.org';
 }
 
@@ -155,7 +158,7 @@ sub new_profile {
         $xml->endTag('keywords');
     }
     $xml->endTag('orcid-bio');
-    if (($profile->{works} && @{$profile->{works}}) ||
+    if (($profile->{works} && @{$profile->{works}}) || 
             ($profile->{affiliations} && @{$profile->{affiliations}})) {
         $xml->startTag('orcid-activities');
         if ($profile->{works} && @{$profile->{works}}) {
@@ -222,86 +225,6 @@ sub new_profile {
     my $location = $res_headers->{location};
     my ($orcid) = $location =~ m!([^/]+)/orcid-profile$!;
     $orcid;
-}
-
-sub add_works {
-    my ($self, $access_token, $orcid, $work) = @_;
-
-    my $url = $self->url;
-    my $headers = {
-        'Accept' => 'application/xml',
-        'Content-Type' => 'application/vdn.orcid+xml',
-        'Authorization' => "Bearer $access_token",
-    };
-
-    my $req_body = $self->_create_works_xml($work);
-
-    my ($res_code, $res_headers, $res_body) =
-        $self->_t->post("$url/$orcid/works", $req_body, $headers);
-    decode_json($res_body);
-}
-
-sub update_works {
-    my ($self, $access_token, $orcid, $work, $put_code) = @_;
-
-    my $url = $self->url;
-    my $headers = {
-        'Accept' => 'application/xml',
-        'Content-Type' => 'application/vdn.orcid+xml',
-        'Authorization' => "Bearer $access_token",
-    };
-
-    my $req_body = $self->_create_works_xml($work);
-
-    my ($res_code, $res_headers, $res_body) =
-        $self->_t->put("$url/$orcid/work/$put_code", $req_body, $headers);
-    decode_json($res_body);
-
-}
-
-sub delete_works {
-    my ($self, $access_token, $orcid, $put_code) = @_;
-
-    my $url = $self->url;
-    my $headers = {
-        'Accept' => 'application/xml',
-        'Content-Type' => 'application/vdn.orcid+xml',
-        'Authorization' => "Bearer $access_token",
-    };
-
-    my ($res_code, $res_headers, $res_body) =
-        $self->_t->delete("$url/$orcid/work/$put_code", , $headers);
-    decode_json($res_body);
-}
-
-sub _create_works_xml {
-    my ($self, $work) = @_;
-
-    my $xml = XML::Writer->new(OUTPUT => 'self', ENCODING => 'UTF-8');
-    $xml->xmlDecl;
-
-    $xml->startTag('work:work',
-        'xmlns:common' => "http://www.orcid.org/ns/common",
-        'xmlns:work' => "http://www.orcid.org/ns/work",
-        'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
-        'xsi:schemaLocation' => "http://www.orcid.org/ns/work /work-2.0.xsd ",
-    );
-
-    $xml->startTag('work:title');
-    $xml->dataElement('common:title', $work->{title});
-    $xml->endTag('work:title');
-    $xml->dataElement('work:type', $work->{type});
-    $xml->startTag('common:external-ids');
-    $xml->startTag('common:external-id');
-    $xml->dataElement('common:external-id-type', 'doi');
-    $xml->dataElement('common:external-id-value', $work->{doi});
-    $xml->dataElement('common:external-id-url', 'https://doi.org/' . $work->{doi});
-    $xml->dataElement('common:external-id-relationship', 'self');
-    $xml->endTag('common:external-ids');
-    $xml->endTag('common:external-id');
-    $xml->endTag('work:work');
-
-    return $xml->to_string;
 }
 
 1;

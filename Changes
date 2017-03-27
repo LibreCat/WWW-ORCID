@@ -1,6 +1,8 @@
 Revision history for WWW-ORCID
 
 {{$NEXT}}
+  - support for the 2.0 API
+  - library API reorganization and cleanup
 
 0.02  2015-09-01 14:22:11 CEST
   - more pod

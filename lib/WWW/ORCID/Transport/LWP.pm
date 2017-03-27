@@ -2,9 +2,12 @@ package WWW::ORCID::Transport::LWP;
 
 use strict;
 use warnings;
-use namespace::clean;
-use Moo;
+
+our $VERSION = 0.02;
+
 use LWP::UserAgent ();
+use Moo;
+use namespace::clean;
 
 with 'WWW::ORCID::Transport';
 

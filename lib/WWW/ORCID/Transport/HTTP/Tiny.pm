@@ -2,9 +2,12 @@ package WWW::ORCID::Transport::HTTP::Tiny;
 
 use strict;
 use warnings;
-use namespace::clean;
+
+our $VERSION = 0.02;
+
 use Moo;
 use HTTP::Tiny;
+use namespace::clean;
 
 with 'WWW::ORCID::Transport';
 

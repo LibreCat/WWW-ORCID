@@ -2,10 +2,14 @@ package WWW::ORCID::API::Common;
 
 use strict;
 use warnings;
-use namespace::clean;
+
+our $VERSION = 0.02;
 
 use Class::Load qw(try_load_class);
 use Moo::Role;
+use namespace::clean;
+
+my $DEFAULT_TRANSPORT = 'LWP';
 
 requires '_build_url';
 
@@ -33,14 +37,13 @@ has _t => (
     is => 'ro',
     init_arg => 0,
     lazy => 1,
-    builder => '_build_t',
 );
 
 sub _build_transport {
-    'LWP';
+    $DEFAULT_TRANSPORT;
 }
 
-sub _build_t {
+sub _build__t {
     my ($self) = @_;
     my $transport = $self->transport;
     my $transport_class = "WWW::ORCID::Transport::${transport}";

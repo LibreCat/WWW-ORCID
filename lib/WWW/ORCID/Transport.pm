@@ -2,9 +2,12 @@ package WWW::ORCID::Transport;
 
 use strict;
 use warnings;
-use namespace::clean;
+
+our $VERSION = 0.02;
+
 use URI ();
 use Moo::Role;
+use namespace::clean;
 
 requires 'get';
 requires 'post_form';

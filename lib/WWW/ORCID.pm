@@ -3,6 +3,30 @@ package WWW::ORCID;
 use strict;
 use warnings;
 
+our $VERSION = 0.02;
+
+use Class::Load qw(try_load_class);
+use namespace::clean;
+
+my $DEFAULT_VERSION = '2.0';
+
+sub new {
+    my $self = shift;
+    my $opts = ref $_[0] ? {%{$_[0]}} : {@_};
+    my $version = $opts->{version} ||= $DEFAULT_VERSION;
+    $version =~ s/\./_/g;
+    my $class = "WWW::ORCID::API::v${version}";
+    try_load_class($class)
+      or croak("Could not load $class: $!");
+    $class->new($opts);
+}
+
+1;
+
+__END__
+
+=pod
+
 =head1 NAME
 
 WWW::ORCID - Module to interface with the ORCID webservice
@@ -11,7 +35,7 @@ WWW::ORCID - Module to interface with the ORCID webservice
 
     use WWW::ORCID;
 
-    my $orcid   = WWW::ORCID::API::Pub->new;
+    my $orcid   = WWW::ORCID->new(version => '1.0');
     my $id      = '0000-0001-8390-6171';
 
     my $profile = $orcid->get_profile($id);
@@ -50,13 +74,6 @@ WWW::ORCID - Module to interface with the ORCID webservice
 
 Module to interface with the ORCID webservice.
 
-=cut
-
-our $VERSION = 0.02;
-
-use WWW::ORCID::API::Pub ();
-use WWW::ORCID::API ();
-
 =head1 SEE ALSO
 
 L<http://members.orcid.org/api>
@@ -78,5 +95,3 @@ by the Free Software Foundation; or the Artistic License.
 See http://dev.perl.org/licenses/ for more information.
 
 =cut
-
-1;
