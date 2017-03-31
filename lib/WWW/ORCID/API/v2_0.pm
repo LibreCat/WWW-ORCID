@@ -14,22 +14,34 @@ use namespace::clean;
 
 with 'WWW::ORCID::API';
 
-my @GET_RECORD_PARTS = qw(
-    activities
-    address
-    biography
-    educations
-    email
-    employments
-    external-identifiers
-    fundings
-    keywords
-    other-names
-    peer-reviews
-    person
-    personal-details
-    researcher-urls
-    works
+my %RECORD_PARTS = (
+    activities => 'get_activities',
+    address => 'get_address',
+    biography => 'get_biography',
+    educations => 'get_educations',
+    email => 'get_email',
+    employments => 'get_employments',
+    'external-identifiers' => 'get_external_identifiers',
+    fundings => 'get_fundings',
+    keywords => 'get_keywords',
+    'other-names' => 'get_other_names',
+    'peer-reviews' => 'get_peer_reviews',
+    person => 'get_person',
+    'personal-details' => 'get_personal_details',
+    'researcher-urls' => 'get_researcher_urls',
+    works => 'get_works',
+);
+
+my %RECORD_PUT_CODE_PARTS = (
+    education => 'get_education',
+    employment => 'get_employment',
+    'external-identifiers' => 'get_external_identifier',
+    funding => 'get_funding',
+    keywords => 'get_keyword',
+    'other-names' => 'get_other_name',
+    'peer-review' => 'get_peer_review',
+    'researcher-urls' => 'get_researcher_url',
+    'work' => 'get_work',
 );
 
 sub _build_api_url {
@@ -65,12 +77,18 @@ sub _get_record_part {
     decode_json($res_body);
 }
 
-for my $part (@GET_RECORD_PARTS) {
+for my $part (keys %RECORD_PARTS) {
     my $pkg = __PACKAGE__;
-    my $sym = "get_${part}";
-    $sym =~ s/-/_/g;
+    my $sym = $RECORD_PARTS{$part};
     quote_sub("${pkg}::${sym}",
-        "\$_[0]->_get_record_part(\$_[1], \$_[2], '${part}')");
+        qq|\$_[0]->_get_record_part(\$_[1], \$_[2], '${part}')|);
+}
+
+for my $part (keys %RECORD_PUT_CODE_PARTS) {
+    my $pkg = __PACKAGE__;
+    my $sym = $RECORD_PUT_CODE_PARTS{$part};
+    quote_sub("${pkg}::${sym}",
+        qq|\$_[0]->_get_record_part(\$_[1], \$_[2], join('/', '${part}', \$_[3]))|);
 }
 
 1;
