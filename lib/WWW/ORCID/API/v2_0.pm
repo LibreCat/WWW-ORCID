@@ -34,14 +34,19 @@ my %RECORD_PARTS = (
 
 my %RECORD_PUT_CODE_PARTS = (
     education => 'get_education',
+    'education/summary' => 'get_education_summary',
     employment => 'get_employment',
+    'employment/summary' => 'get_employment_summary',
     'external-identifiers' => 'get_external_identifier',
     funding => 'get_funding',
+    'funding/summary' => 'get_funding_summary',
     keywords => 'get_keyword',
     'other-names' => 'get_other_name',
     'peer-review' => 'get_peer_review',
+    'peer-review/summary' => 'get_peer_review_summary',
     'researcher-urls' => 'get_researcher_url',
     'work' => 'get_work',
+    'work/summary' => 'get_work_summary',
 );
 
 sub _build_api_url {
