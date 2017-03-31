@@ -10,6 +10,7 @@ requires 'JSON', '>=2.51';
 requires 'LWP::UserAgent', 0;
 requires 'Moo', '>=1.000008';
 requires 'namespace::clean', 0;
+requires 'Sub::Quote', 0;
 requires 'URI', 0;
 requires 'XML::Writer', 0;
 
