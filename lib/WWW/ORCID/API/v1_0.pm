@@ -13,35 +13,15 @@ use namespace::clean;
 
 with 'WWW::ORCID::API';
 
-sub _build_url {
+sub _build_api_url {
     my ($self) = @_;
     $self->sandbox ? 'http://api.sandbox.orcid.org'
                    : 'http://api.orcid.org';
 }
 
-sub new_access_token {
-    my ($self, $client_id, $client_secret, %opts) = @_;
-
-    my $grant_type = $opts{grant_type};
-    if (!defined $grant_type) { $grant_type = 'client_credentials' }
-
-    my $url = $self->url;
-    my $headers = {'Accept' => 'application/json'};
-    my $form = {
-        client_id => $client_id,
-        client_secret => $client_secret,
-        grant_type => $grant_type,
-    };
-    $form->{scope} = $opts{scope} if defined $opts{scope};
-    $form->{code}  = $opts{code}  if defined $opts{code};
-    my ($res_code, $res_headers, $res_body) =
-        $self->_t->post_form("$url/oauth/token", $form, $headers);
-    decode_json($res_body);
-}
-
 sub get_profile {
     my ($self, $access_token, $orcid) = @_;
-    my $url = $self->url;
+    my $url = $self->api_url;
     my $headers = {
         'Accept' => 'application/orcid+json',
         'Authorization' => "Bearer $access_token",
@@ -53,7 +33,7 @@ sub get_profile {
 
 sub get_bio {
     my ($self, $access_token, $orcid) = @_;
-    my $url = $self->url;
+    my $url = $self->api_url;
     my $headers = {
         'Accept' => 'application/orcid+json',
         'Authorization' => "Bearer $access_token",
@@ -65,7 +45,7 @@ sub get_bio {
 
 sub get_works {
     my ($self, $access_token, $orcid) = @_;
-    my $url = $self->url;
+    my $url = $self->api_url;
     my $headers = {
         'Accept' => 'application/orcid+json',
         'Authorization' => "Bearer $access_token",
@@ -77,7 +57,7 @@ sub get_works {
 
 sub search_bio {
     my ($self, $access_token, $params) = @_;
-    my $url = $self->url;
+    my $url = $self->api_url;
     my $headers = {
         'Accept' => 'application/orcid+json',
         'Authorization' => "Bearer $access_token",
@@ -89,7 +69,7 @@ sub search_bio {
 
 sub new_profile {
     my ($self, $access_token, $profile) = @_;
-    my $url = $self->url;
+    my $url = $self->api_url;
     my $headers = {
         'Accept' => 'application/xml',
         'Content-Type' => 'application/vdn.orcid+xml',
