@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use WWW::ORCID;
+use WWW::ORCID::API::v2_0 ();
 use Dancer;
 
 my $client;
@@ -53,7 +54,6 @@ get '/search' => sub {
     to_json($token) . to_json(client->search($token, $params));
 };
 
-use WWW::ORCID::API::v2_0 ();
 for my $method (values %WWW::ORCID::API::v2_0::GET_RECORD_PARTS) {
     my $path = $method;
     $path =~ s/^get_//;
@@ -61,6 +61,17 @@ for my $method (values %WWW::ORCID::API::v2_0::GET_RECORD_PARTS) {
         my $orcid = param('orcid');
         my $token = $tokens->{$orcid} || return redirect('/authorize');
         to_json(client->$method($token, $orcid));
+    };
+}
+
+for my $method (values %WWW::ORCID::API::v2_0::GET_RECORD_PUT_CODE_PARTS) {
+    my $path = $method;
+    $path =~ s/^get_//;
+    get "/:orcid/$path/:put_code" => sub {
+        my $orcid = param('orcid');
+        my $put_code = param('put_code');
+        my $token = $tokens->{$orcid} || return redirect('/authorize');
+        to_json(client->$method($token, $orcid, $put_code));
     };
 }
 
