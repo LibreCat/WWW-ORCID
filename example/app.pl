@@ -54,7 +54,7 @@ get '/search' => sub {
     to_json($token) . to_json(client->search($token, $params));
 };
 
-for my $method (values %WWW::ORCID::API::v2_0::GET_RECORD_PARTS) {
+for my $method (values %WWW::ORCID::API::v2_0::GET) {
     my $path = $method;
     $path =~ s/^get_//;    get "/:orcid/$path" => sub {
         my $orcid = param('orcid');
@@ -63,7 +63,7 @@ for my $method (values %WWW::ORCID::API::v2_0::GET_RECORD_PARTS) {
     };
 }
 
-for my $method (values %WWW::ORCID::API::v2_0::GET_RECORD_PUT_CODE_PARTS) {
+for my $method (values %WWW::ORCID::API::v2_0::GET_PUT_CODE) {
     my $path = $method;
     $path =~ s/^get_//;
     get "/:orcid/$path/:put_code" => sub {
@@ -74,7 +74,7 @@ for my $method (values %WWW::ORCID::API::v2_0::GET_RECORD_PUT_CODE_PARTS) {
     };
 }
 
-for my $method (values %WWW::ORCID::API::v2_0::ADD_RECORD_PARTS) {
+for my $method (values %WWW::ORCID::API::v2_0::ADD) {
     my $path = $method;
     $path =~ s/^add_//;
     post "/:orcid/$path" => sub {

@@ -13,7 +13,7 @@ use namespace::clean;
 
 with 'WWW::ORCID::MemberAPI';
 
-our %GET_RECORD_PARTS = (
+our %GET = (
     activities => 'get_activities',
     address => 'get_address',
     biography => 'get_biography',
@@ -31,7 +31,7 @@ our %GET_RECORD_PARTS = (
     works => 'get_works',
 );
 
-our %GET_RECORD_PUT_CODE_PARTS = (
+our %GET_PUT_CODE = (
     education => 'get_education',
     'education/summary' => 'get_education_summary',
     employment => 'get_employment',
@@ -48,7 +48,7 @@ our %GET_RECORD_PUT_CODE_PARTS = (
     'work/summary' => 'get_work_summary',
 );
 
-our %ADD_RECORD_PARTS = (
+our %ADD = (
     address => 'add_address',
     education => 'add_education',
     employment => 'add_employment',
@@ -81,7 +81,7 @@ sub search {
     decode_json($res_body);
 }
 
-sub _get_record_part {
+sub _get {
     my ($self, $token, $orcid, $path) = @_;
     my $url = $self->api_url;
     $token = $token->{access_token} if ref $token;
@@ -94,7 +94,7 @@ sub _get_record_part {
     decode_json($res_body);
 }
 
-sub _add_record_part {
+sub _add {
     my ($self, $token, $orcid, $path, $body) = @_;
     my $url = $self->api_url;
     $token = $token->{access_token} if ref $token;
@@ -107,25 +107,25 @@ sub _add_record_part {
     decode_json($res_body);
 }
 
-for my $part (keys %GET_RECORD_PARTS) {
+for my $part (keys %GET) {
     my $pkg = __PACKAGE__;
-    my $sym = $GET_RECORD_PARTS{$part};
+    my $sym = $GET{$part};
     quote_sub("${pkg}::${sym}",
-        qq|\$_[0]->_get_record_part(\$_[1], \$_[2], '${part}')|);
+        qq|\$_[0]->_get(\$_[1], \$_[2], '${part}')|);
 }
 
-for my $part (keys %GET_RECORD_PUT_CODE_PARTS) {
+for my $part (keys %GET_PUT_CODE) {
     my $pkg = __PACKAGE__;
-    my $sym = $GET_RECORD_PUT_CODE_PARTS{$part};
+    my $sym = $GET_PUT_CODE{$part};
     quote_sub("${pkg}::${sym}",
-        qq|\$_[0]->_get_record_part(\$_[1], \$_[2], join('/', '${part}', \$_[3]))|);
+        qq|\$_[0]->_get(\$_[1], \$_[2], join('/', '${part}', \$_[3]))|);
 }
 
-for my $part (keys %ADD_RECORD_PARTS) {
+for my $part (keys %ADD) {
     my $pkg = __PACKAGE__;
-    my $sym = $ADD_RECORD_PARTS{$part};
+    my $sym = $ADD{$part};
     quote_sub("${pkg}::${sym}",
-        qq|\$_[0]->_add_record_part(\$_[1], \$_[2], '${part}', \$_[3])|);
+        qq|\$_[0]->_add(\$_[1], \$_[2], '${part}', \$_[3])|);
 }
 
 1;
