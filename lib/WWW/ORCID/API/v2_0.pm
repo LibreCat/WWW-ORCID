@@ -50,6 +50,15 @@ our %GET_RECORD_PUT_CODE_PARTS = (
 
 our %ADD_RECORD_PARTS = (
     address => 'add_address',
+    education => 'add_education',
+    employment => 'add_employment',
+    'external-identifiers' => 'add_external_identifier',
+    funding => 'add_funding',
+    keywords => 'add_keyword',
+    other_names => 'add_other_name',
+    peer_review => 'add_peer_review',
+    researcher_urls => 'add_researcher_url',
+    work => 'add_work',
 );
 
 sub _build_api_url {
