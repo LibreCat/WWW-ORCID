@@ -1,0 +1,10 @@
+show_errors: 1
+logger: LogAny
+log: debug
+charset: UTF-8
+content_type: application/json
+LogAny:
+  logger:
+    - Stdout
+
+

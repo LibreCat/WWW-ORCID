@@ -28,9 +28,8 @@ sub get {
         $url = $self->_param_url($url, $params);
     }
     my $res = $self->_client->get($url, %$headers);
-    if ($self->debug) {
-        use Data::Dumper;
-        print STDERR Dumper($res)."\n";
+    if ($self->log->is_debug) {
+        $self->log->debugf("get response: %s", $res);
     }
     $res->code, $self->_get_headers($res), $res->content;
 }
@@ -38,9 +37,8 @@ sub get {
 sub post_form {
     my ($self, $url, $form, $headers) = @_;
     my $res = $self->_client->post($url, $form, %$headers);
-    if ($self->debug) {
-        use Data::Dumper;
-        print STDERR Dumper($res)."\n";
+    if ($self->log->is_debug) {
+        $self->log->debugf("post form response: %s", $res);
     }
     $res->code, $self->_get_headers($res), $res->content;
 }
@@ -48,9 +46,8 @@ sub post_form {
 sub post {
     my ($self, $url, $body, $headers) = @_;
     my $res = $self->_client->post($url, %$headers, Content => $body);
-    if ($self->debug) {
-        use Data::Dumper;
-        print STDERR Dumper($res)."\n";
+    if ($self->log->is_debug) {
+        $self->log->debugf("post response: %s", $res);
     }
     $res->code, $self->_get_headers($res), $res->content;
 }
