@@ -14,3 +14,5 @@ WWW-ORCID-*
 !*.t
 cpanfile.snapshot
 local
+example/sessions/*
+!example/sessions/.gitkeep

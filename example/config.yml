@@ -3,6 +3,8 @@ logger: LogAny
 log: debug
 charset: UTF-8
 content_type: application/json
+session: YAML
+template: template_toolkit
 LogAny:
   logger:
     - Stdout

@@ -99,12 +99,11 @@ sub _add {
     my $url = $self->api_url;
     $token = $token->{access_token} if ref $token;
     my $headers = {
-        'Accept' => 'application/orcid+json',
+        'Content-Type' => 'application/json',
+        'Accept' => 'text/html',
         'Authorization' => "Bearer $token",
     };
-    my ($res_code, $res_headers, $res_body) =
-        $self->_t->post("$url/$orcid/$path", encode_json($body), $headers);
-    decode_json($res_body);
+    [$self->_t->post("$url/$orcid/$path", encode_json($body), $headers)];
 }
 
 for my $part (keys %GET) {
