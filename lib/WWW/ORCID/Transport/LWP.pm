@@ -24,32 +24,34 @@ sub _build_client {
 
 sub get {
     my ($self, $url, $params, $headers) = @_;
-    if ($params) {
-        $url = $self->_param_url($url, $params);
-    }
+    $url = $self->_param_url($url, $params) if $params;
     my $res = $self->_client->get($url, %$headers);
-    if ($self->log->is_debug) {
-        $self->log->debugf("get response: %s", $res);
-    }
-    $res->code, $self->_get_headers($res), $res->content;
+    [$res->code, $self->_get_headers($res), $res->content];
 }
 
 sub post_form {
     my ($self, $url, $form, $headers) = @_;
     my $res = $self->_client->post($url, $form, %$headers);
-    if ($self->log->is_debug) {
-        $self->log->debugf("post form response: %s", $res);
-    }
-    $res->code, $self->_get_headers($res), $res->content;
+    [$res->code, $self->_get_headers($res), $res->content];
 }
 
 sub post {
     my ($self, $url, $body, $headers) = @_;
     my $res = $self->_client->post($url, %$headers, Content => $body);
-    if ($self->log->is_debug) {
-        $self->log->debugf("post response: %s", $res);
-    }
-    $res->code, $self->_get_headers($res), $res->content;
+    [$res->code, $self->_get_headers($res), $res->content];
+}
+
+sub put {
+    my ($self, $url, $body, $headers) = @_;
+    my $res = $self->_client->put($url, %$headers, Content => $body);
+    [$res->code, $self->_get_headers($res), $res->content];
+}
+
+sub delete {
+    my ($self, $url, $params, $headers) = @_;
+    $url = $self->_param_url($url, $params) if $params;
+    my $res = $self->_client->delete($url, %$headers);
+    [$res->code, $self->_get_headers($res), $res->content];
 }
 
 sub _get_headers {

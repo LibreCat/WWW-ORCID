@@ -28,19 +28,27 @@ sub get {
         $url = $self->_param_url($url, $params);
     }
     my $res = $self->_client->get($url, {headers => $headers});
-    $res->{status}, $res->{headers}, $res->{content};
+    [$res->{status}, $res->{headers}, $res->{content}];
 }
 
 sub post_form {
     my ($self, $url, $form, $headers) = @_;
     my $res = $self->_client->post_form($url, $form, {headers => $headers});
-    $res->{status}, $res->{headers}, $res->{content};
+    [$res->{status}, $res->{headers}, $res->{content}];
 }
 
 sub post {
     my ($self, $url, $body, $headers) = @_;
     my $res = $self->_client->post($url, {content => $body, headers => $headers});
-    $res->{status}, $res->{headers}, $res->{content};
+    [$res->{status}, $res->{headers}, $res->{content}];
+}
+
+sub put {
+    die 'TODO';
+}
+
+sub delete {
+    die 'TODO';
 }
 
 1;

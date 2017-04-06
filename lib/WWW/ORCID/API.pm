@@ -15,21 +15,11 @@ with 'WWW::ORCID::Base';
 
 requires '_build_api_url';
 
-has sandbox => (
-    is => 'ro',
-);
-
-has transport => (
-    is => 'lazy',
-);
-
-has api_url => (
-    is => 'lazy',
-);
-
-has _t => (
-    is => 'lazy',
-);
+has sandbox => (is => 'ro',);
+has transport => (is => 'lazy',);
+has api_url => (is => 'lazy',);
+has last_error => (is => 'rwp', init_arg => undef, clearer => '_clear_last_error', trigger => 1);
+has _t => (is => 'lazy',);
 
 sub _build_transport {
     'LWP';
@@ -42,6 +32,10 @@ sub _build__t {
     try_load_class($transport_class)
       or croak("Could not load $transport_class: $!");
     $transport_class->new;
+}
+sub _trigger_last_error {
+    my ($self, $res) = @_;
+    $self->log->errorf("%s", $res) if $self->log->is_error;
 }
 
 1;
