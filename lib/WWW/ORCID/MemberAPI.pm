@@ -22,14 +22,18 @@ sub _build_oauth_url {
 
 sub access_token {
     my $self = shift;
+    $self->_clear_last_error;
     my $opts = ref $_[0] ? $_[0] : {@_};
     $opts->{client_id} = $self->client_id;
     $opts->{client_secret} = $self->client_secret;
     my $url = join('/', $self->oauth_url, 'token');
     my $headers = {'Accept' => 'application/json'};
-    my ($res_code, $res_headers, $res_body) =
-        $self->_t->post_form($url, $opts, $headers);
-    decode_json($res_body);
+    my $res = $self->_t->post_form($url, $opts, $headers);
+    if ($res->[0] eq '200') {
+        return decode_json($res->[2]);
+    }
+    $self->_set_last_error($res);
+    return;
 }
 
 sub authorize_url {

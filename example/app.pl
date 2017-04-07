@@ -5,6 +5,7 @@ use warnings;
 use WWW::ORCID;
 #use WWW::ORCID::API::v2_0 ();
 use Dancer;
+use Dancer::Plugin::FlashMessage;
 
 #my $get_methods = [map { s/get_//; $_ } values %WWW::ORCID::API::v2_0::GET];
 #my $get_put_code_methods = [map { s/get_//; $_ } values %WWW::ORCID::API::v2_0::GET_PUT_CODE];
@@ -43,6 +44,60 @@ hook 'before' => sub {
     if (defined(my $orcid = param('orcid'))) {
         tokens->{$orcid} || return redirect('/authorize');
     }
+};
+
+get '/' => sub {
+    template 'index', {
+        tokens => tokens,
+        ops    => $client->ops,
+    };
+};
+
+post '/' => sub {
+    my $params = params;
+    my $action = $params->{action};
+    my $op = $params->{op};
+    my $body;
+    my $opts = {};
+    my $response_body;
+    my $error;
+
+    if ($params->{orcid}) {
+        $opts->{orcid} = $params->{orcid};
+        $opts->{token} ||= tokens->{$opts->{orcid}};
+    }
+    if ($params->{put_code}) {
+        $opts->{put_code} = $params->{put_code};
+    }
+    if ($params->{body}) {
+        $body = from_json($params->{body});
+    }
+
+    if ($action eq 'get') {
+        if (my $res = $client->get($op, $opts)) {
+            $response_body = to_json($res);
+        }
+    }
+    elsif ($action eq 'add' || $action eq 'update') {
+        if (my $res = $client->$action($op, $body, $opts)) {
+            $response_body = to_json($res);
+        }
+    }
+    elsif ($action eq 'delete') {
+        if ($client->delete($op, $opts)) {
+            flash success => "Succesfully deleted";
+        }
+    }
+    if ($client->last_error) {
+        $error = to_json($client->last_error);
+    }
+
+    template 'index', {
+        tokens => tokens,
+        ops => $client->ops,
+        response_body => $response_body,
+        error => $error,
+    };
 };
 
 get '/read-public-token' => sub {
@@ -87,6 +142,7 @@ get '/search' => sub {
     content_type 'application/json';
     to_json($client->search(%$params, token => read_public_token));
 };
+
 
 #get '/:orcid/add' => sub {
     #template 'add', {methods => $add_methods};

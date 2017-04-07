@@ -33,6 +33,7 @@ sub _build__t {
       or croak("Could not load $transport_class: $!");
     $transport_class->new;
 }
+
 sub _trigger_last_error {
     my ($self, $res) = @_;
     $self->log->errorf("%s", $res) if $self->log->is_error;

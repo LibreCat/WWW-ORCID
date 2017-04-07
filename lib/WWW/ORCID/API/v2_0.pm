@@ -13,34 +13,38 @@ use namespace::clean;
 
 with 'WWW::ORCID::MemberAPI';
 
-#our $OPS = {
-    #'search' => {get => 1},
-    #'activities' => {orcid => 1, get => 1},
-    #'address' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    #'biography' => {orcid => 1, get => 1},
-    #'education' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    #'education/summary' => {orcid => 1, get_pc => 1},
-    #'educations' => {orcid => 1, get => 1},
-    #'email' => {orcid => 1, get => 1},
-    #'employment' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    #'employment/summary' => {orcid => 1, get_pc => 1},
-    #'employments' => {orcid => 1, get => 1},
-    #'external-identifiers' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    #'funding' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    #'funding/summary' => {orcid => 1, get_pc => 1},
-    #'fundings' => {orcid => 1, get => 1},
-    #'keywords' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    #'other-names' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    #'peer-review' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    #'peer-review/summary' => {orcid => 1, get_pc => 1},
-    #'peer-reviews' => {orcid => 1, get => 1},
-    #'person' => {orcid => 1, get => 1},
-    #'personal-details' => {orcid => 1, get => 1},
-    #'researcher-urls' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    #'work' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    #'work/summary' => {orcid => 1, get_pc => 1},
-    #'works' => {orcid => 1, get => 1, get_pc_bulk => 1},
-#};
+my $OPS = {
+    'search' => {get => 1},
+    'activities' => {orcid => 1, get => 1},
+    'address' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'biography' => {orcid => 1, get => 1},
+    'education' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'education/summary' => {orcid => 1, get_pc => 1},
+    'educations' => {orcid => 1, get => 1},
+    'email' => {orcid => 1, get => 1},
+    'employment' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'employment/summary' => {orcid => 1, get_pc => 1},
+    'employments' => {orcid => 1, get => 1},
+    'external-identifiers' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'funding' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'funding/summary' => {orcid => 1, get_pc => 1},
+    'fundings' => {orcid => 1, get => 1},
+    'keywords' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'other-names' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'peer-review' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'peer-review/summary' => {orcid => 1, get_pc => 1},
+    'peer-reviews' => {orcid => 1, get => 1},
+    'person' => {orcid => 1, get => 1},
+    'personal-details' => {orcid => 1, get => 1},
+    'researcher-urls' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'work' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'work/summary' => {orcid => 1, get_pc => 1},
+    'works' => {orcid => 1, get => 1, get_pc_bulk => 1},
+};
+
+sub ops {
+    $OPS;
+}
 
 sub _build_api_url {
     $_[0]->sandbox ? 'https://api.sandbox.orcid.org/v2.0'
@@ -56,10 +60,8 @@ sub _url {
         $path = "$orcid/$path";
     }
     if (defined(my $put_code = $opts->{put_code})) {
+        $put_code = join(',', @$put_code) if ref $put_code;
         $path = "$path/$put_code";
-    } elsif (defined(my $put_codes = $opts->{put_codes})) {
-        $put_codes = join(',', @$put_codes) if ref $put_codes;
-        $path = join('/', $path, $put_codes);
     }
     join('/', $host, $path);
 }
@@ -72,7 +74,7 @@ sub _token {
 
 sub _clean {
     my ($opts) = @_;
-    delete $opts->{$_} for qw(orcid token put_code put_codes);
+    delete $opts->{$_} for qw(orcid token put_code);
     $opts;
 }
 
@@ -150,7 +152,12 @@ sub delete {
         'Accept' => 'application/orcid+json',
         'Authorization' => "Bearer $token",
     };
-    $self->_t->delete($url, undef, $headers);
+    my $res = $self->_t->delete($url, undef, $headers);
+    if ($res->[0] eq '204') {
+        return 1;
+    }
+    $self->_set_last_error($res);
+    return;
 }
 
 sub search {
