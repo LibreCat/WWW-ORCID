@@ -14,6 +14,7 @@ use namespace::clean;
 with 'WWW::ORCID::MemberAPI';
 
 my $OPS = {
+    'group-id-record' => {get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
     'search' => {get => 1},
     'activities' => {orcid => 1, get => 1},
     'address' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
@@ -167,107 +168,6 @@ sub search {
     my $self = shift;
     $self->get('search', @_);
 }
-
-#our %GET = (
-    #activities => 'get_activities',
-    #address => 'get_address',
-    #biography => 'get_biography',
-    #educations => 'get_educations',
-    #email => 'get_email',
-    #employments => 'get_employments',
-    #'external-identifiers' => 'get_external_identifiers',
-    #fundings => 'get_fundings',
-    #keywords => 'get_keywords',
-    #'other-names' => 'get_other_names',
-    #'peer-reviews' => 'get_peer_reviews',
-    #person => 'get_person',
-    #'personal-details' => 'get_personal_details',
-    #'researcher-urls' => 'get_researcher_urls',
-    #works => 'get_works',
-#);
-
-#our %GET_PUT_CODE = (
-    #education => 'get_education',
-    #'education/summary' => 'get_education_summary',
-    #employment => 'get_employment',
-    #'employment/summary' => 'get_employment_summary',
-    #'external-identifiers' => 'get_external_identifier',
-    #funding => 'get_funding',
-    #'funding/summary' => 'get_funding_summary',
-    #keywords => 'get_keyword',
-    #'other-names' => 'get_other_name',
-    #'peer-review' => 'get_peer_review',
-    #'peer-review/summary' => 'get_peer_review_summary',
-    #'researcher-urls' => 'get_researcher_url',
-    #'work' => 'get_work',
-    #'work/summary' => 'get_work_summary',
-#);
-
-#our %ADD = (
-    #address => 'add_address',
-    #education => 'add_education',
-    #employment => 'add_employment',
-    #'external-identifiers' => 'add_external_identifier',
-    #funding => 'add_funding',
-    #keywords => 'add_keyword',
-    #'other-names' => 'add_other_name',
-    #'peer-review' => 'add_peer_review',
-    #'researcher-urls' => 'add_researcher_url',
-    #work => 'add_work',
-#);
-
-#our %DELETE_PUT_CODE = (
-    #address => 'delete_address',
-    #education => 'delete_education',
-    #employment => 'delete_employment',
-    #'external-identifiers' => 'delete_external_identifier',
-    #funding => 'delete_funding',
-    #keywords => 'delete_keyword',
-    #'other-names' => 'delete_other_name',
-    #'peer-review' => 'delete_peer_review',
-    #'researcher-urls' => 'delete_researcher_url',
-    #work => 'delete_work',
-#);
-
-#sub search {
-    #my $self = shift;
-    #my $token = shift;
-    #my $opts = ref $_[0] ? $_[0] : @_ == 1 ? {q => $_[0]} : {@_};
-    #my $url = $self->api_url;
-    #$token = $token->{access_token} if ref $token;
-    #my $headers = {
-        #'Accept' => 'application/orcid+json',
-        #'Authorization' => "Bearer $token",
-    #};
-    #my ($res_code, $res_headers, $res_body) =
-        #$self->_t->get("$url/search", $opts, $headers);
-    #decode_json($res_body);
-#}
-
-#sub _get {
-    #my ($self, $token, $orcid, $path) = @_;
-    #my $url = $self->api_url;
-    #$token = $token->{access_token} if ref $token;
-    #my $headers = {
-        #'Accept' => 'application/orcid+json',
-        #'Authorization' => "Bearer $token",
-    #};
-    #my ($res_code, $res_headers, $res_body) =
-        #$self->_t->get("$url/$orcid/$path", undef, $headers);
-    #decode_json($res_body);
-#}
-
-#sub _add {
-    #my ($self, $token, $orcid, $path, $body) = @_;
-    #my $url = $self->api_url;
-    #$token = $token->{access_token} if ref $token;
-    #my $headers = {
-        #'Content-Type' => 'application/json',
-        #'Accept' => 'text/html',
-        #'Authorization' => "Bearer $token",
-    #};
-    #[$self->_t->post("$url/$orcid/$path", encode_json($body), $headers)];
-#}
 
 #for my $part (keys %GET) {
     #my $pkg = __PACKAGE__;

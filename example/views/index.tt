@@ -12,62 +12,72 @@
     <![endif]-->
   </head>
   <body>
-    <% IF flash.success %>
-      <p class="bg-success">
-        <% flash.success %>
-      </p>
-    <% END %>
-    <% IF flash.error %>
-      <p class="bg-danger">
-        <% flash.error %>
-      </p>
-    <% END %>
-    <% IF error %>
-      <p class="bg-danger">
-        <% error | html %>
-      </p>
-    <% END %>
-    <% IF response_body %>
-      <p class="bg-success">
-        <% response_body | html %>
-      </p>
-    <% END %>
-    <form action="/" method="post">
-      <div class="form-group">
-        <label for="action">Action</label>
-        <select name="action" id="action">
-            <% FOR m IN ['get', 'add', 'update', 'delete'] %>
-            <option value="<% m %>"><% m %></option>
+    <div class="container-fluid">
+      <% IF flash.success %>
+        <p class="bg-success">
+          <% flash.success %>
+        </p>
+      <% END %>
+      <% IF flash.error %>
+        <p class="bg-danger">
+          <% flash.error %>
+        </p>
+      <% END %>
+
+      <div class="row">
+        <div class="col-md-6">
+            <form action="/" method="post">
+              <div class="form-group">
+                <label for="action">Action</label>
+                <select name="action" id="action">
+                    <% FOR action IN ['get', 'add', 'update', 'delete'] %>
+                    <option value="<% action %>"<% IF action == params.action %> selected<% END %>><% action %></option>
+                    <% END %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="op">Op</label>
+                <select name="op" id="op">
+                    <% FOR op IN ops.keys.sort %>
+                    <option value="<% op %>"<% IF op == params.op %> selected<% END %>><% op | html %></option>
+                    <% END %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="orcid">ORCID</label>
+                <select name="orcid" id="orcid">
+                    <option value=""></option>
+                    <% FOR orcid IN tokens.keys %>
+                    <option value="<% orcid %>"<% IF orcid == params.orcid %> selected<% END %>><% orcid %></option>
+                    <% END %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="put_code">Put code</label>
+                <input type="text" name="put_code" class="form-control" id="put_code" value="<% params.put_code %>">
+              </div>
+              <div class="form-group">
+                <label for="body">Request body</label>
+                <textarea name="body" class="form-control" id="body"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <% IF error %>
+              <p class="bg-danger">
+                <% error | html %>
+              </p>
             <% END %>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="op">Op</label>
-        <select name="op" id="op">
-            <% FOR op IN ops.keys.sort %>
-            <option value="<% op %>"><% op | html %></option>
+            <% IF response_body %>
+              <p class="bg-success">
+                <% response_body | html %>
+              </p>
             <% END %>
-        </select>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="orcid">ORCID</label>
-        <select name="orcid" id="orcid">
-            <option value=""></option>
-            <% FOR orcid IN tokens.keys %>
-            <option value="<% orcid %>"><% orcid %></option>
-            <% END %>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="put_code">Put code</label>
-        <input type="text" name="put_code" class="form-control" id="put_code" value="">
-      </div>
-      <div class="form-group">
-        <label for="body">Request body</label>
-        <textarea name="body" class="form-control" id="body"></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   </body>
