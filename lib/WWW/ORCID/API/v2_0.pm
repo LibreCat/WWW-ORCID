@@ -102,6 +102,7 @@ sub client_details {
     my $self = shift;
     $self->_clear_last_error;
     my $opts = ref $_[0] ? $_[0] : {@_};
+    $opts->{token} ||= $self->read_public_token;
     my $url = join('/', $self->api_url, 'client', $self->client_id);
     my $res = $self->_t->get($url, undef, _headers($opts));
     if ($res->[0] eq '200') {
@@ -116,6 +117,7 @@ sub get {
     $self->_clear_last_error;
     my $path = shift;
     my $opts = ref $_[0] ? $_[0] : {@_};
+    $opts->{token} ||= $self->read_public_token;
     my $url = _url($self->api_url, $path, $opts);
     my $headers = _headers($opts);
     my $res = $self->_t->get($url, _clean($opts), $headers);
