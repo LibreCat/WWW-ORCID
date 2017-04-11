@@ -13,17 +13,6 @@ my $client = WWW::ORCID->new(
     client_secret => $ENV{ORCID_CLIENT_SECRET},
 );
 
-my $read_public_token;
-my $read_limited_token;
-
-sub read_public_token {
-    $read_public_token ||= $client->access_token(grant_type => 'client_credentials', scope => '/read-public');
-}
-
-sub read_limited_token {
-    $read_limited_token ||= $client->access_token(grant_type => 'client_credentials', scope => '/read-limited');
-}
-
 sub tokens {
     session('tokens') || {};
 }
@@ -104,12 +93,12 @@ post '/' => sub {
 
 get '/read-public-token' => sub {
     content_type 'application/json';
-    to_json(read_public_token);
+    to_json($client->read_public_token);
 };
 
 get '/read-limited-token' => sub {
     content_type 'application/json';
-    to_json(read_limited_token);
+    to_json($client->read_limited_token);
 };
 
 get '/tokens' => sub {
@@ -141,13 +130,13 @@ get '/authorized' => sub {
 
 get '/client' => sub {
     content_type 'application/json';
-    to_json($client->client_details(token => read_public_token));
+    to_json($client->client_details(token => $client->read_public_token));
 };
 
 get '/search' => sub {
     my $params = params;
     content_type 'application/json';
-    to_json($client->search(%$params, token => read_public_token));
+    to_json($client->search(%$params, token => $client->read_public_token));
 };
 
 get '/:orcid/*/?:put_code?' => sub {

@@ -13,6 +13,9 @@ use namespace::clean;
 
 with 'WWW::ORCID::MemberAPI';
 
+has read_public_token => (is => 'lazy');
+has read_limited_token => (is => 'lazy');
+
 my $OPS = {
     'group-id-record' => {get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
     'search' => {get => 1},
@@ -50,6 +53,14 @@ sub ops {
 sub _build_api_url {
     $_[0]->sandbox ? 'https://api.sandbox.orcid.org/v2.0'
                    : 'https://api.orcid.org/v2.0';
+}
+
+sub _build_read_public_token {
+    $_[0]->access_token(grant_type => 'client_credentials', scope => '/read-public');
+}
+
+sub _build_read_limited_token {
+    $_[0]->access_token(grant_type => 'client_credentials', scope => '/read-limited');
 }
 
 sub _url {
@@ -123,12 +134,7 @@ sub add {
     my $opts = ref $_[0] ? $_[0] : {@_};
     my $body = encode_json($data);
     my $url = _url($self->api_url, $path, $opts);
-    my $token = _token($opts);
-    my $headers = {
-        'Content-Type' => 'application/vnd.orcid+json',
-        'Authorization' => "Bearer $token",
-    };
-    my $res = $self->_t->post($url, $body, $headers);
+    my $res = $self->_t->post($url, $body, _headers($opts, 1));
     if ($res->[0] eq '201') {
         my $loc = $res->[1]->{location};
         my ($put_code) = $loc =~ m|([^/]+)$|;
@@ -148,13 +154,7 @@ sub update {
     $opts->{put_code} ||= $data->{'put-code'} if $data->{'put-code'};
     my $body = encode_json($data);
     my $url = _url($self->api_url, $path, $opts);
-    my $token = _token($opts);
-    my $headers = {
-        'Content-Type' => 'application/vnd.orcid+json',
-        'Accept' => 'application/vnd.orcid+json',
-        'Authorization' => "Bearer $token",
-    };
-    my $res = $self->_t->put($url, $body, $headers);
+    my $res = $self->_t->put($url, $body, _headers($opts, 1));
     if ($res->[0] eq '200') {
         return decode_json($res->[2]);
     }
@@ -168,12 +168,7 @@ sub delete {
     my $path = shift;
     my $opts = ref $_[0] ? $_[0] : {@_};
     my $url = _url($self->api_url, $path, $opts);
-    my $token = _token($opts);
-    my $headers = {
-        'Content-Type' => 'application/vnd.orcid+json',
-        'Authorization' => "Bearer $token",
-    };
-    my $res = $self->_t->delete($url, undef, $headers);
+    my $res = $self->_t->delete($url, undef, _headers($opts));
     if ($res->[0] eq '204') {
         return 1;
     }
@@ -191,20 +186,6 @@ sub search {
     #my $sym = $GET{$part};
     #quote_sub("${pkg}::${sym}",
         #qq|\$_[0]->_get(\$_[1], \$_[2], '${part}')|);
-#}
-
-#for my $part (keys %GET_PUT_CODE) {
-    #my $pkg = __PACKAGE__;
-    #my $sym = $GET_PUT_CODE{$part};
-    #quote_sub("${pkg}::${sym}",
-        #qq|\$_[0]->_get(\$_[1], \$_[2], join('/', '${part}', \$_[3]))|);
-#}
-
-#for my $part (keys %ADD) {
-    #my $pkg = __PACKAGE__;
-    #my $sym = $ADD{$part};
-    #quote_sub("${pkg}::${sym}",
-        #qq|\$_[0]->_add(\$_[1], \$_[2], '${part}', \$_[3])|);
 #}
 
 1;
