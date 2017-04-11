@@ -23,7 +23,7 @@
       </p>
     <% END %>
     <% IF error %>
-      <p class="bg-error">
+      <p class="bg-danger">
         <% error | html %>
       </p>
     <% END %>

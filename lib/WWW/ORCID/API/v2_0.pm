@@ -86,7 +86,7 @@ sub get {
     my $url = _url($self->api_url, $path, $opts);
     my $token = _token($opts);
     my $headers = {
-        'Accept' => 'application/orcid+json',
+        'Accept' => 'application/vnd.orcid+json',
         'Authorization' => "Bearer $token",
     };
     my $res = $self->_t->get($url, _clean($opts), $headers);
@@ -101,19 +101,20 @@ sub add {
     my $self = shift;
     $self->_clear_last_error;
     my $path = shift;
-    my $body = shift;
-    $body = encode_json($body) if ref $body;
+    my $data = shift;
     my $opts = ref $_[0] ? $_[0] : {@_};
+    my $body = encode_json($data);
     my $url = _url($self->api_url, $path, $opts);
     my $token = _token($opts);
     my $headers = {
-        'Content-Type' => 'application/json',
-        'Accept' => 'text/html',
+        'Content-Type' => 'application/vnd.orcid+json',
         'Authorization' => "Bearer $token",
     };
     my $res = $self->_t->post($url, $body, $headers);
     if ($res->[0] eq '201') {
-        return decode_json($res->[2]);
+        my $loc = $res->[1]->{location};
+        my ($put_code) = $loc =~ m|([^/]+)$|;
+        return $put_code;
     }
     $self->_set_last_error($res);
     return;
@@ -123,14 +124,16 @@ sub update {
     my $self = shift;
     $self->_clear_last_error;
     my $path = shift;
-    my $body = shift;
-    $body = encode_json($body) if ref $body;
+    my $data = shift;
     my $opts = ref $_[0] ? $_[0] : {@_};
+    $data->{'put-code'} ||= $opts->{put_code} if $opts->{put_code};
+    $opts->{put_code} ||= $data->{'put-code'} if $data->{'put-code'};
+    my $body = encode_json($data);
     my $url = _url($self->api_url, $path, $opts);
     my $token = _token($opts);
     my $headers = {
-        'Content-Type' => 'application/json',
-        'Accept' => 'text/html',
+        'Content-Type' => 'application/vnd.orcid+json',
+        'Accept' => 'application/vnd.orcid+json',
         'Authorization' => "Bearer $token",
     };
     my $res = $self->_t->put($url, $body, $headers);
@@ -149,7 +152,7 @@ sub delete {
     my $url = _url($self->api_url, $path, $opts);
     my $token = _token($opts);
     my $headers = {
-        'Accept' => 'application/orcid+json',
+        'Content-Type' => 'application/vnd.orcid+json',
         'Authorization' => "Bearer $token",
     };
     my $res = $self->_t->delete($url, undef, $headers);
