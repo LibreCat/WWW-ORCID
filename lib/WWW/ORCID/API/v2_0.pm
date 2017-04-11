@@ -79,13 +79,15 @@ sub _url {
 }
 
 sub _headers {
-    my ($opts, $add_content_type) = @_;
+    my ($opts, $add_accept, $add_content_type) = @_;
     my $token = $opts->{token};
     $token = $token->{access_token} if ref $token;
     my $headers = {
-        'Accept' => 'application/vnd.orcid+json',
         'Authorization' => "Bearer $token",
     };
+    if ($add_accept) {
+        $headers->{'Accept'} = 'application/vnd.orcid+json';
+    }
     if ($add_content_type) {
         $headers->{'Content-Type'} = 'application/vnd.orcid+json';
     }
@@ -104,7 +106,7 @@ sub client_details {
     my $opts = ref $_[0] ? $_[0] : {@_};
     $opts->{token} ||= $self->read_public_token;
     my $url = join('/', $self->api_url, 'client', $self->client_id);
-    my $res = $self->_t->get($url, undef, _headers($opts));
+    my $res = $self->_t->get($url, undef, _headers($opts, 1, 0));
     if ($res->[0] eq '200') {
         return decode_json($res->[2]);
     }
@@ -119,7 +121,7 @@ sub get {
     my $opts = ref $_[0] ? $_[0] : {@_};
     $opts->{token} ||= $self->read_public_token;
     my $url = _url($self->api_url, $path, $opts);
-    my $headers = _headers($opts);
+    my $headers = _headers($opts, 1, 0);
     my $res = $self->_t->get($url, _clean($opts), $headers);
     if ($res->[0] eq '200') {
         return decode_json($res->[2]);
@@ -136,7 +138,7 @@ sub add {
     my $opts = ref $_[0] ? $_[0] : {@_};
     my $body = encode_json($data);
     my $url = _url($self->api_url, $path, $opts);
-    my $res = $self->_t->post($url, $body, _headers($opts, 1));
+    my $res = $self->_t->post($url, $body, _headers($opts, 0, 1));
     if ($res->[0] eq '201') {
         my $loc = $res->[1]->{location};
         my ($put_code) = $loc =~ m|([^/]+)$|;
@@ -157,7 +159,7 @@ sub update {
     $opts->{put_code} ||= $data->{'put-code'} if $data->{'put-code'};
     my $body = encode_json($data);
     my $url = _url($self->api_url, $path, $opts);
-    my $res = $self->_t->put($url, $body, _headers($opts, 1));
+    my $res = $self->_t->put($url, $body, _headers($opts, 1, 1));
     if ($res->[0] eq '200') {
         return decode_json($res->[2]);
     }
@@ -171,7 +173,7 @@ sub delete {
     my $path = shift;
     my $opts = ref $_[0] ? $_[0] : {@_};
     my $url = _url($self->api_url, $path, $opts);
-    my $res = $self->_t->delete($url, undef, _headers($opts));
+    my $res = $self->_t->delete($url, undef, _headers($opts, 1));
     if ($res->[0] eq '204') {
         return 1;
     }

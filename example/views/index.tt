@@ -10,6 +10,7 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <link href="jsoneditor.min.css" rel="stylesheet" type="text/css">
   </head>
   <body>
     <div class="container-fluid">
@@ -21,7 +22,7 @@
 
       <div class="row">
         <div class="col-md-6">
-            <form action="/" method="post">
+            <form action="/" method="post" id="orcid">
               <div class="form-group">
                 <label for="action">Action</label>
                 <select name="action" id="action">
@@ -53,7 +54,9 @@
               </div>
               <div class="form-group">
                 <label for="body">Request body</label>
-                <textarea name="body" class="form-control" id="body"></textarea>
+                <input type="hidden" name="body" id="body" value="<% body | html %>">
+                <div id="body_editor" style="height:400px">
+                </div>
               </div>
               <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -61,19 +64,33 @@
 
         <div class="col-md-6">
             <% IF error %>
-              <p class="bg-danger">
+              <div class="bg-danger">
                 <% error | html %>
-              </p>
+              </div>
             <% END %>
             <% IF response_body %>
-              <p class="bg-success">
-                <% response_body | html %>
-              </p>
+              <input type="hidden" name="response_body" id="response_body" value="<% response_body | html %>">
+              <div id="response_body_editor" style="height:800px">
+              </div>
             <% END %>
         </div>
       </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="jsoneditor.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var request_editor = new JSONEditor(document.getElementById('body_editor'), {mode: 'code'});
+            request_editor.setText($('#body').val());
+            $("#orcid").submit(function(e) {
+              $('#body').val(request_editor.getText());
+            });
+            <% IF response_body %>
+            var response_editor = new JSONEditor(document.getElementById('response_body_editor'), {mode: 'code'});
+            response_editor.setText($('#response_body').val());
+            <% END %>
+        });
+    </script>
   </body>
 </html>
