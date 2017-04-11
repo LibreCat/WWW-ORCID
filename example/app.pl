@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use WWW::ORCID;
 use Dancer;
-use Dancer::Plugin::FlashMessage;
 
 my $client = WWW::ORCID->new(
     version => '2.0',
@@ -45,6 +44,7 @@ post '/' => sub {
     my $body;
     my $opts = {};
     my $response_body;
+    my $success;
     my $error;
 
     if ($params->{orcid}) {
@@ -76,7 +76,7 @@ post '/' => sub {
     }
     elsif ($action eq 'delete') {
         if ($client->delete($op, $opts)) {
-            flash success => "Succesfully deleted";
+            $success = "Succesfully deleted";
         }
     }
     if ($client->last_error) {
@@ -87,6 +87,7 @@ post '/' => sub {
         tokens => tokens,
         ops => $client->ops,
         response_body => $response_body,
+        success => $success,
         error => $error,
     };
 };

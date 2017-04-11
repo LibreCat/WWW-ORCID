@@ -13,14 +13,9 @@
   </head>
   <body>
     <div class="container-fluid">
-      <% IF flash.success %>
+      <% IF success %>
         <p class="bg-success">
-          <% flash.success %>
-        </p>
-      <% END %>
-      <% IF flash.error %>
-        <p class="bg-danger">
-          <% flash.error %>
+          <% success %>
         </p>
       <% END %>
 
