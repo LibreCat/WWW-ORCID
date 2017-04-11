@@ -67,10 +67,18 @@ sub _url {
     join('/', $host, $path);
 }
 
-sub _token {
-    my ($opts) = @_;
+sub _headers {
+    my ($opts, $add_content_type) = @_;
     my $token = $opts->{token};
-    ref $token ? $token->{access_token} : $token;
+    $token = $token->{access_token} if ref $token;
+    my $headers = {
+        'Accept' => 'application/vnd.orcid+json',
+        'Authorization' => "Bearer $token",
+    };
+    if ($add_content_type) {
+        $headers->{'Content-Type'} = 'application/vnd.orcid+json';
+    }
+    $headers;
 }
 
 sub _clean {
@@ -79,17 +87,26 @@ sub _clean {
     $opts;
 }
 
+sub client_details {
+    my $self = shift;
+    $self->_clear_last_error;
+    my $opts = ref $_[0] ? $_[0] : {@_};
+    my $url = join('/', $self->api_url, 'client', $self->client_id);
+    my $res = $self->_t->get($url, undef, _headers($opts));
+    if ($res->[0] eq '200') {
+        return decode_json($res->[2]);
+    }
+    $self->_set_last_error($res);
+    return;
+}
+
 sub get {
     my $self = shift;
     $self->_clear_last_error;
     my $path = shift;
     my $opts = ref $_[0] ? $_[0] : {@_};
     my $url = _url($self->api_url, $path, $opts);
-    my $token = _token($opts);
-    my $headers = {
-        'Accept' => 'application/vnd.orcid+json',
-        'Authorization' => "Bearer $token",
-    };
+    my $headers = _headers($opts);
     my $res = $self->_t->get($url, _clean($opts), $headers);
     if ($res->[0] eq '200') {
         return decode_json($res->[2]);

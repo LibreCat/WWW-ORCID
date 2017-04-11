@@ -139,6 +139,11 @@ get '/authorized' => sub {
     to_json($token);
 };
 
+get '/client' => sub {
+    content_type 'application/json';
+    to_json($client->client_details(token => read_public_token));
+};
+
 get '/search' => sub {
     my $params = params;
     content_type 'application/json';
