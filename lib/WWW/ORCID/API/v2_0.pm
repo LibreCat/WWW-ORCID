@@ -152,6 +152,7 @@ sub update {
     my $path = shift;
     my $data = shift;
     my $opts = ref $_[0] ? $_[0] : {@_};
+    # put code needs to be in both path and body
     $data->{'put-code'} ||= $opts->{put_code} if $opts->{put_code};
     $opts->{put_code} ||= $data->{'put-code'} if $data->{'put-code'};
     my $body = encode_json($data);
@@ -178,16 +179,31 @@ sub delete {
     return;
 }
 
-sub search {
-    my $self = shift;
-    $self->get('search', @_);
-}
+for my $op (keys %$OPS) {
+    my $spec = $OPS->{$op};
+    my $pkg = __PACKAGE__;
+    my $sym = $op;
+    $sym =~ s|[-/]|_|g;
 
-#for my $part (keys %GET) {
-    #my $pkg = __PACKAGE__;
-    #my $sym = $GET{$part};
-    #quote_sub("${pkg}::${sym}",
-        #qq|\$_[0]->_get(\$_[1], \$_[2], '${part}')|);
-#}
+    if ($spec->{get} || $spec->{get_pc} || $spec->{get_pc_bulk}) {
+        quote_sub("${pkg}::${sym}",
+            qq|shift->get('${op}', \@_)|);
+    }
+
+    if ($spec->{post}) {
+        quote_sub("${pkg}::add_${sym}",
+            qq|shift->add('${op}', \@_)|);
+    }
+
+    if ($spec->{put_pc}) {
+        quote_sub("${pkg}::update_${sym}",
+            qq|shift->update('${op}', \@_)|);
+    }
+
+    if ($spec->{del_pc}) {
+        quote_sub("${pkg}::delete_${sym}",
+            qq|shift->delete('${op}', \@_)|);
+    }
+}
 
 1;
