@@ -24,27 +24,31 @@
         <div class="col-md-6">
             <form action="/" method="post" id="orcid">
               <div class="form-group">
-                <label for="action">Action</label>
-                <select name="action" id="action">
-                    <% FOR action IN ['get', 'add', 'update', 'delete'] %>
-                    <option value="<% action %>"<% IF action == params.action %> selected<% END %>><% action %></option>
-                    <% END %>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="op">Op</label>
-                <select name="op" id="op">
-                    <% FOR op IN ops.keys.sort %>
-                    <option value="<% op %>"<% IF op == params.op %> selected<% END %>><% op | html %></option>
-                    <% END %>
-                </select>
-              </div>
-              <div class="form-group">
                 <label for="orcid">ORCID</label>
                 <select name="orcid" id="orcid">
                     <option value=""></option>
                     <% FOR orcid IN tokens.keys %>
                     <option value="<% orcid %>"<% IF orcid == params.orcid %> selected<% END %>><% orcid %></option>
+                    <% END %>
+                </select>
+              </div>
+              <div class="form-group">
+                <select name="op" id="op">
+                    <% FOR op IN ops.keys.sort %>
+                    <option value="<% op %>"
+                        <% IF params.op == op %>
+                            selected
+                        <% END %>
+                        <% FOR kv IN ops.item(op).pairs %>
+                            data-<% kv.key %>="<% kv.value %>"
+                        <% END %>
+                    >
+                        <% op | html %></option>
+                    <% END %>
+                </select>
+                <select name="action" id="action">
+                    <% FOR action IN ['get', 'add', 'update', 'delete'] %>
+                    <option value="<% action %>"><% action %></option>
                     <% END %>
                 </select>
               </div>
@@ -90,6 +94,54 @@
             var response_editor = new JSONEditor(document.getElementById('response_body_editor'), {mode: 'code'});
             response_editor.setText($('#response_body').val());
             <% END %>
+
+            (function() {
+                var ops = $('#op'),
+                    actions = $('#action'),
+                    orcid = $('#orcid');
+                    putCode = $('#put_code'),
+                    body = $('#body');
+
+                var needsPutCode = function() {
+                    var op = ops.find('option:selected');
+                    return actions.val() != 'add' && (
+                        op.data('get_pc') == '1' || op.data('get_pc_bulk') == '1' ||
+                        op.data('update') == '1' || op.data('delete') == '1');
+                };
+
+                var needsBody = function() {
+                    return actions.val() == 'add' || actions.val() == 'update';
+                };
+
+                var isGet = function(op) {
+                    return op.data('get') == '1' || op.data('get_pc') == '1' || op.data('get_pc_bulk') == '1';
+                };
+
+                var opChanged = function() {
+                    var op = ops.find('option:selected');
+                    orcid.closest('.form-group').toggle(op.data('orcid') == '1');
+                    actions.find('option[value="get"]').toggle(isGet(op));
+                    actions.find('option[value="add"]').toggle(op.data('add') == '1');
+                    actions.find('option[value="update"]').toggle(op.data('update') == '1');
+                    actions.find('option[value="delete"]').toggle(op.data('delete') == '1');
+                    actions.find('option').each(function () {
+                        if ($(this).css('display') != 'none') {
+                            $(this).prop('selected', true);
+                            return false;
+                        }
+                    });
+                    actionChanged();
+                };
+
+                var actionChanged = function() {
+                    putCode.closest('.form-group').toggle(needsPutCode());
+                    body.closest('.form-group').toggle(needsBody());
+                };
+
+                ops.change(opChanged);
+                actions.change(actionChanged);
+                opChanged();
+            })();
         });
     </script>
   </body>

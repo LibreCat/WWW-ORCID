@@ -17,31 +17,31 @@ has read_public_token => (is => 'lazy');
 has read_limited_token => (is => 'lazy');
 
 my $OPS = {
-    'group-id-record' => {get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'group-id-record' => {get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
     'search' => {get => 1},
     'activities' => {orcid => 1, get => 1},
-    'address' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'address' => {orcid => 1, get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
     'biography' => {orcid => 1, get => 1},
-    'education' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'education' => {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
     'education/summary' => {orcid => 1, get_pc => 1},
     'educations' => {orcid => 1, get => 1},
     'email' => {orcid => 1, get => 1},
-    'employment' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'employment' => {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
     'employment/summary' => {orcid => 1, get_pc => 1},
     'employments' => {orcid => 1, get => 1},
-    'external-identifiers' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    'funding' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'external-identifiers' => {orcid => 1, get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
+    'funding' => {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
     'funding/summary' => {orcid => 1, get_pc => 1},
     'fundings' => {orcid => 1, get => 1},
-    'keywords' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    'other-names' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    'peer-review' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'keywords' => {orcid => 1, get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
+    'other-names' => {orcid => 1, get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
+    'peer-review' => {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
     'peer-review/summary' => {orcid => 1, get_pc => 1},
     'peer-reviews' => {orcid => 1, get => 1},
     'person' => {orcid => 1, get => 1},
     'personal-details' => {orcid => 1, get => 1},
-    'researcher-urls' => {orcid => 1, get => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
-    'work' => {orcid => 1, post => 1, del_pc => 1, get_pc => 1, put_pc => 1},
+    'researcher-urls' => {orcid => 1, get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
+    'work' => {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
     'work/summary' => {orcid => 1, get_pc => 1},
     'works' => {orcid => 1, get => 1, get_pc_bulk => 1},
 };
@@ -192,17 +192,17 @@ for my $op (keys %$OPS) {
             qq|shift->get('${op}', \@_)|);
     }
 
-    if ($spec->{post}) {
+    if ($spec->{add}) {
         quote_sub("${pkg}::add_${sym}",
             qq|shift->add('${op}', \@_)|);
     }
 
-    if ($spec->{put_pc}) {
+    if ($spec->{update}) {
         quote_sub("${pkg}::update_${sym}",
             qq|shift->update('${op}', \@_)|);
     }
 
-    if ($spec->{del_pc}) {
+    if ($spec->{delete}) {
         quote_sub("${pkg}::delete_${sym}",
             qq|shift->delete('${op}', \@_)|);
     }
