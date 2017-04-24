@@ -209,3 +209,13 @@ for my $op (keys %$OPS) {
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+WWW::ORCID::API::v2_0 - A client for the ORCID 2.0 API
+
+=cut

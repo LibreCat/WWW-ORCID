@@ -30,54 +30,127 @@ __END__
 
 =head1 NAME
 
-WWW::ORCID - Module to interface with the ORCID webservice
+WWW::ORCID - A client for the ORCID API
 
 =head1 SYNOPSIS
 
     use WWW::ORCID;
 
-    my $orcid   = WWW::ORCID->new(version => '1.0');
-    my $id      = '0000-0001-8390-6171';
+    my $client = WWW::ORCID->new(client_id => "XXX", client_secret => "XXX", sandbox => 1);
 
-    my $profile = $orcid->get_profile($id);
-    my $bio     = $orcid->get_bio($id);
-    my $works   = $orcid->get_works($id);
-
-    my $result  = $orcid->search_bio({q => "johnson"});
-
-    # Fielded search
-    ############################################################
-    # Fields
-    #   - orcid
-    #   - given-names
-    #   - family-name
-    #   - credit-name
-    #   - other-names
-    #   - email
-    #   - external-id-reference
-    #   - digital-object-ids
-    #   - work-titles
-    #   - keywords
-    #   - creation date
-    #   - last modified date
-    #   - text
-    # The query string follow the Lucene query syntax
-    # See also: http://members.orcid.org/api/tutorial-searching-api-12-and-earlier
-    my $result  = $orcid->search_bio({q => "family-name:johnson"});
-
-    my $found   = $result->{'orcid-search-results'}->{'num-found'};
-
-    # paging search results
-
-    my $result2 = $orcid->search_bio({q => "family-name:hochstenbach", start => 10, rows => 10});
+    my $hits = $orcid->search(q => "johnson");
 
 =head1 DESCRIPTION
 
-Module to interface with the ORCID webservice.
+A client for the ORCID 2.0 API.
+
+=head1 CREATING A NEW INSTANCE
+
+The C<new> method returns a new L<2.0 API client|WWW::ORCID::API::v2_0>.
+
+Arguments to new:
+
+=head2 C<client_id>
+
+Your ORCID client id (required).
+
+=head2 C<client_secret>
+
+Your ORCID client secret (required).
+
+=head2 C<version>
+
+The only possible value at the moment is C<"2.0"> which will load L<WWW::ORCID::API::v2_0>.
+
+=head2 C<sandbox>
+
+The client will talk to the L<ORCID sandbox API|https://api.sandbox.orcid.org/v2.0> if set to C<1>.
+
+=head2 C<transport>
+
+Specify the HTTP client to use. Possible values are L<LWP> or L<HTTP::Tiny>. Default is L<LWP>.
+
+=head1 METHODS
+
+=head2 C<client_id>
+
+Returns the ORCID client id used by the client.
+
+=head2 C<client_secret>
+
+Returns the ORCID client secret used by the client.
+
+=head2 C<sandbox>
+
+Returns C<1> if the client is using the sandbox API, C<0> otherwise.
+
+=head2 C<transport>
+
+Returns what HTTP transport the client is using.
+
+=head2 C<api_url>
+
+Returns the base API url used by the client.
+
+=head2 C<oauth_url>
+
+Returns the base OAuth url used by the client.
+
+=head C<access_token>
+
+Request a new access token.
+
+    my $token = $client->access_token(
+        grant_type => 'client_credentials',
+        scope => '/read-limited',
+    );
+
+=head C<authorize_url>
+
+Returns an authorization url for 3-legged OAuth requests.
+
+    # in your web application
+    redirect($client->authorize_url(
+        show_login => 'true',
+        scope => '/person/update',
+        response_type => 'code',
+        redirect_uri => 'http://your.callback/url',
+    ));
+
+See the C</authorize> and C</authorized> routes in the included playground
+application for an example.
+
+=head2 C<read_public_token>
+
+Return an access token with scope C</read-public>.
+
+=head2 C<read_limited_token>
+
+Return an access token with scope C</read-limited>.
+
+=head2 C<client_details>
+
+Fetch details about the current C<client_id>.
+
+See C<API docs|https://api.orcid.org/v2.0/#!/Member_API_v2.0/viewClient>.
+
+=head2 C<search>
+
+    $client->search(q => 'Smith');
+
+See C<API docs|https://api.orcid.org/v2.0/#!/Member_API_v2.0/searchByQueryXML>.
+
+=head2 C<last_error>
+
+Returns the last error returned by the ORCID API, if any.
+
+=head2 C<log>
+
+Returns the L<Log::Any> logger.
 
 =head1 SEE ALSO
 
-L<http://members.orcid.org/api>
+L<https://api.orcid.org/v2.0/#/Member_API_v2.0>
 
 =head1 AUTHOR
 
