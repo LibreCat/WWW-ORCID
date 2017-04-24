@@ -132,13 +132,9 @@ Return an access token with scope C</read-limited>.
 
 Fetch details about the current C<client_id>.
 
-See C<API docs|https://api.orcid.org/v2.0/#!/Member_API_v2.0/viewClient>.
-
 =head2 C<search>
 
     $client->search(q => 'Smith');
-
-See C<API docs|https://api.orcid.org/v2.0/#!/Member_API_v2.0/searchByQueryXML>.
 
 =head2 C<activities>
 
