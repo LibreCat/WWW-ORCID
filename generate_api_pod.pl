@@ -16,9 +16,10 @@ for my $op (sort keys %$ops) {
     if ($spec->{get} || $spec->{get_pc} || $spec->{get_pc_bulk}) {
         print "=head2 C<${sym}>\n\n";
 
-        if ($spec->{get} && $spec->{get_pc_bulk}) {
-            print "    my \$all_recs = \$client->${sym}(token => \$token);\n";
-        } elsif ($spec->{get}) {
+        if ($spec->{get} && ($spec->{get_pc} || $spec->{get_pc_bulk})) {
+            print "    my \$recs = \$client->${sym}(token => \$token);\n";
+        }
+        elsif ($spec->{get}) {
             print "    my \$rec = \$client->${sym}(token => \$token);\n";
         }
         if ($spec->{get_pc}) {

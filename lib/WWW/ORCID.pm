@@ -146,7 +146,7 @@ Equivalent to:
 
 =head2 C<address>
 
-    my $rec = $client->address(token => $token);
+    my $recs = $client->address(token => $token);
     my $rec = $client->address(token => $token, put_code => '123');
 
 Equivalent to:
@@ -291,7 +291,7 @@ Equivalent to:
 
 =head2 C<external_identifiers>
 
-    my $rec = $client->external_identifiers(token => $token);
+    my $recs = $client->external_identifiers(token => $token);
     my $rec = $client->external_identifiers(token => $token, put_code => '123');
 
 Equivalent to:
@@ -372,7 +372,7 @@ Equivalent to:
 
 =head2 C<group_id_record>
 
-    my $rec = $client->group_id_record(token => $token);
+    my $recs = $client->group_id_record(token => $token);
     my $rec = $client->group_id_record(token => $token, put_code => '123');
 
 Equivalent to:
@@ -405,7 +405,7 @@ Equivalent to:
 
 =head2 C<keywords>
 
-    my $rec = $client->keywords(token => $token);
+    my $recs = $client->keywords(token => $token);
     my $rec = $client->keywords(token => $token, put_code => '123');
 
 Equivalent to:
@@ -438,7 +438,7 @@ Equivalent to:
 
 =head2 C<other_names>
 
-    my $rec = $client->other_names(token => $token);
+    my $recs = $client->other_names(token => $token);
     my $rec = $client->other_names(token => $token, put_code => '123');
 
 Equivalent to:
@@ -535,7 +535,7 @@ Equivalent to:
 
 =head2 C<researcher_urls>
 
-    my $rec = $client->researcher_urls(token => $token);
+    my $recs = $client->researcher_urls(token => $token);
     my $rec = $client->researcher_urls(token => $token, put_code => '123');
 
 Equivalent to:
@@ -608,7 +608,7 @@ Equivalent to:
 
 =head2 C<works>
 
-    my $all_recs = $client->works(token => $token);
+    my $recs = $client->works(token => $token);
     my $recs = $client->works(token => $token, put_code => ['123', '456']);
 
 Equivalent to:
