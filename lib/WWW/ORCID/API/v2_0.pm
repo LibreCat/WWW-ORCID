@@ -18,7 +18,6 @@ has read_limited_token => (is => 'lazy');
 
 my $OPS = {
     'group-id-record' => {get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'search' => {get => 1},
     'activities' => {orcid => 1, get => 1},
     'address' => {orcid => 1, get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
     'biography' => {orcid => 1, get => 1},
@@ -181,7 +180,7 @@ sub delete {
     return;
 }
 
-for my $op (keys %$OPS) {
+for my $op (sort keys %$OPS) {
     my $spec = $OPS->{$op};
     my $pkg = __PACKAGE__;
     my $sym = $op;

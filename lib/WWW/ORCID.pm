@@ -96,7 +96,7 @@ Returns the base API url used by the client.
 
 Returns the base OAuth url used by the client.
 
-=head C<access_token>
+=head2 C<access_token>
 
 Request a new access token.
 
@@ -105,7 +105,7 @@ Request a new access token.
         scope => '/read-limited',
     );
 
-=head C<authorize_url>
+=head2 C<authorize_url>
 
 Returns an authorization url for 3-legged OAuth requests.
 
@@ -139,6 +139,485 @@ See C<API docs|https://api.orcid.org/v2.0/#!/Member_API_v2.0/viewClient>.
     $client->search(q => 'Smith');
 
 See C<API docs|https://api.orcid.org/v2.0/#!/Member_API_v2.0/searchByQueryXML>.
+
+=head2 C<activities>
+
+    my $rec = $client->activities(token => $token);
+
+Equivalent to:
+
+    $client->get('activities', %opts)
+
+=head2 C<address>
+
+    my $rec = $client->address(token => $token);
+    my $rec = $client->address(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('address', %opts)
+
+=head2 C<add_address>
+
+    $client->add_address($data, token => $token);
+
+Equivalent to:
+
+    $client->add('address', $data, %opts)
+
+=head2 C<update_address>
+
+    $client->update_address($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('address', $data, %opts)
+
+=head2 C<delete_address>
+
+    my $ok = $client->delete_address(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('address', %opts)
+
+=head2 C<biography>
+
+    my $rec = $client->biography(token => $token);
+
+Equivalent to:
+
+    $client->get('biography', %opts)
+
+=head2 C<education>
+
+    my $rec = $client->education(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('education', %opts)
+
+=head2 C<add_education>
+
+    $client->add_education($data, token => $token);
+
+Equivalent to:
+
+    $client->add('education', $data, %opts)
+
+=head2 C<update_education>
+
+    $client->update_education($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('education', $data, %opts)
+
+=head2 C<delete_education>
+
+    my $ok = $client->delete_education(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('education', %opts)
+
+=head2 C<education_summary>
+
+    my $rec = $client->education_summary(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('education/summary', %opts)
+
+=head2 C<educations>
+
+    my $rec = $client->educations(token => $token);
+
+Equivalent to:
+
+    $client->get('educations', %opts)
+
+=head2 C<email>
+
+    my $rec = $client->email(token => $token);
+
+Equivalent to:
+
+    $client->get('email', %opts)
+
+=head2 C<employment>
+
+    my $rec = $client->employment(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('employment', %opts)
+
+=head2 C<add_employment>
+
+    $client->add_employment($data, token => $token);
+
+Equivalent to:
+
+    $client->add('employment', $data, %opts)
+
+=head2 C<update_employment>
+
+    $client->update_employment($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('employment', $data, %opts)
+
+=head2 C<delete_employment>
+
+    my $ok = $client->delete_employment(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('employment', %opts)
+
+=head2 C<employment_summary>
+
+    my $rec = $client->employment_summary(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('employment/summary', %opts)
+
+=head2 C<employments>
+
+    my $rec = $client->employments(token => $token);
+
+Equivalent to:
+
+    $client->get('employments', %opts)
+
+=head2 C<external_identifiers>
+
+    my $rec = $client->external_identifiers(token => $token);
+    my $rec = $client->external_identifiers(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('external-identifiers', %opts)
+
+=head2 C<add_external_identifiers>
+
+    $client->add_external_identifiers($data, token => $token);
+
+Equivalent to:
+
+    $client->add('external-identifiers', $data, %opts)
+
+=head2 C<update_external_identifiers>
+
+    $client->update_external_identifiers($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('external-identifiers', $data, %opts)
+
+=head2 C<delete_external_identifiers>
+
+    my $ok = $client->delete_external_identifiers(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('external-identifiers', %opts)
+
+=head2 C<funding>
+
+    my $rec = $client->funding(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('funding', %opts)
+
+=head2 C<add_funding>
+
+    $client->add_funding($data, token => $token);
+
+Equivalent to:
+
+    $client->add('funding', $data, %opts)
+
+=head2 C<update_funding>
+
+    $client->update_funding($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('funding', $data, %opts)
+
+=head2 C<delete_funding>
+
+    my $ok = $client->delete_funding(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('funding', %opts)
+
+=head2 C<funding_summary>
+
+    my $rec = $client->funding_summary(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('funding/summary', %opts)
+
+=head2 C<fundings>
+
+    my $rec = $client->fundings(token => $token);
+
+Equivalent to:
+
+    $client->get('fundings', %opts)
+
+=head2 C<group_id_record>
+
+    my $rec = $client->group_id_record(token => $token);
+    my $rec = $client->group_id_record(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('group-id-record', %opts)
+
+=head2 C<add_group_id_record>
+
+    $client->add_group_id_record($data, token => $token);
+
+Equivalent to:
+
+    $client->add('group-id-record', $data, %opts)
+
+=head2 C<update_group_id_record>
+
+    $client->update_group_id_record($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('group-id-record', $data, %opts)
+
+=head2 C<delete_group_id_record>
+
+    my $ok = $client->delete_group_id_record(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('group-id-record', %opts)
+
+=head2 C<keywords>
+
+    my $rec = $client->keywords(token => $token);
+    my $rec = $client->keywords(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('keywords', %opts)
+
+=head2 C<add_keywords>
+
+    $client->add_keywords($data, token => $token);
+
+Equivalent to:
+
+    $client->add('keywords', $data, %opts)
+
+=head2 C<update_keywords>
+
+    $client->update_keywords($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('keywords', $data, %opts)
+
+=head2 C<delete_keywords>
+
+    my $ok = $client->delete_keywords(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('keywords', %opts)
+
+=head2 C<other_names>
+
+    my $rec = $client->other_names(token => $token);
+    my $rec = $client->other_names(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('other-names', %opts)
+
+=head2 C<add_other_names>
+
+    $client->add_other_names($data, token => $token);
+
+Equivalent to:
+
+    $client->add('other-names', $data, %opts)
+
+=head2 C<update_other_names>
+
+    $client->update_other_names($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('other-names', $data, %opts)
+
+=head2 C<delete_other_names>
+
+    my $ok = $client->delete_other_names(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('other-names', %opts)
+
+=head2 C<peer_review>
+
+    my $rec = $client->peer_review(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('peer-review', %opts)
+
+=head2 C<add_peer_review>
+
+    $client->add_peer_review($data, token => $token);
+
+Equivalent to:
+
+    $client->add('peer-review', $data, %opts)
+
+=head2 C<update_peer_review>
+
+    $client->update_peer_review($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('peer-review', $data, %opts)
+
+=head2 C<delete_peer_review>
+
+    my $ok = $client->delete_peer_review(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('peer-review', %opts)
+
+=head2 C<peer_review_summary>
+
+    my $rec = $client->peer_review_summary(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('peer-review/summary', %opts)
+
+=head2 C<peer_reviews>
+
+    my $rec = $client->peer_reviews(token => $token);
+
+Equivalent to:
+
+    $client->get('peer-reviews', %opts)
+
+=head2 C<person>
+
+    my $rec = $client->person(token => $token);
+
+Equivalent to:
+
+    $client->get('person', %opts)
+
+=head2 C<personal_details>
+
+    my $rec = $client->personal_details(token => $token);
+
+Equivalent to:
+
+    $client->get('personal-details', %opts)
+
+=head2 C<researcher_urls>
+
+    my $rec = $client->researcher_urls(token => $token);
+    my $rec = $client->researcher_urls(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('researcher-urls', %opts)
+
+=head2 C<add_researcher_urls>
+
+    $client->add_researcher_urls($data, token => $token);
+
+Equivalent to:
+
+    $client->add('researcher-urls', $data, %opts)
+
+=head2 C<update_researcher_urls>
+
+    $client->update_researcher_urls($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('researcher-urls', $data, %opts)
+
+=head2 C<delete_researcher_urls>
+
+    my $ok = $client->delete_researcher_urls(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('researcher-urls', %opts)
+
+=head2 C<work>
+
+    my $rec = $client->work(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('work', %opts)
+
+=head2 C<add_work>
+
+    $client->add_work($data, token => $token);
+
+Equivalent to:
+
+    $client->add('work', $data, %opts)
+
+=head2 C<update_work>
+
+    $client->update_work($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('work', $data, %opts)
+
+=head2 C<delete_work>
+
+    my $ok = $client->delete_work(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('work', %opts)
+
+=head2 C<work_summary>
+
+    my $rec = $client->work_summary(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('work/summary', %opts)
+
+=head2 C<works>
+
+    my $all_recs = $client->works(token => $token);
+    my $recs = $client->works(token => $token, put_code => ['123', '456']);
+
+Equivalent to:
+
+    $client->get('works', %opts)
 
 =head2 C<last_error>
 
