@@ -8,6 +8,7 @@ on 'test', sub {
 requires 'Class::Load', 0;
 requires 'JSON', '>=2.51';
 requires 'LWP::UserAgent', 0;
+requires 'HTTP::Tiny', 0;
 requires 'Moo', '>=1.000008';
 requires 'namespace::clean', 0;
 requires 'Sub::Quote', 0;
