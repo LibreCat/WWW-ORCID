@@ -9,7 +9,6 @@ Build
 LICENSE
 Makefile.PL
 MANIFEST*
-META.*
 MYMETA.*
 WWW-ORCID-*
 !*.t
