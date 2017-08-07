@@ -3,7 +3,7 @@ package WWW::ORCID::Transport;
 use strict;
 use warnings;
 
-our $VERSION = 0.02;
+our $VERSION = 0.02_01;
 
 use Moo::Role;
 use namespace::clean;

@@ -1,53 +1,59 @@
 # NAME
 
-WWW::ORCID - Module to interface with the ORCID webservice
+WWW::ORCID - A client for the ORCID 2.0 API
 
 # SYNOPSIS
 
-    use WWW::ORCID;
+    my $client = WWW::ORCID->new(client_id => "XXX", client_secret => "XXX");
 
-    my $orcid   = WWW::ORCID->new(version => '1.0');
-    my $id      = '0000-0001-8390-6171';
+    my $client = WWW::ORCID->new(client_id => "XXX", client_secret => "XXX", sandbox => 1);
 
-    my $profile = $orcid->get_profile($id);
-    my $bio     = $orcid->get_bio($id);
-    my $works   = $orcid->get_works($id);
-
-    my $result  = $orcid->search_bio({q => "johnson"});
-
-    # Fielded search
-    ############################################################
-    # Fields
-    #   - orcid
-    #   - given-names
-    #   - family-name
-    #   - credit-name
-    #   - other-names
-    #   - email
-    #   - external-id-reference
-    #   - digital-object-ids
-    #   - work-titles
-    #   - keywords
-    #   - creation date
-    #   - last modified date
-    #   - text
-    # The query string follow the Lucene query syntax
-    # See also: http://members.orcid.org/api/tutorial-searching-api-12-and-earlier
-    my $result  = $orcid->search_bio({q => "family-name:johnson"});
-
-    my $found   = $result->{'orcid-search-results'}->{'num-found'};
-
-    # paging search results
-
-    my $result2 = $orcid->search_bio({q => "family-name:hochstenbach", start => 10, rows => 10});
+    my $client = WWW::ORCID->new(client_id => "XXX", client_secret => "XXX", public => 1);
 
 # DESCRIPTION
 
-Module to interface with the ORCID webservice.
+A client for the ORCID 2.x API.
+
+# CREATING A NEW INSTANCE
+
+The `new` method returns a new [2.0 API client](https://metacpan.org/pod/WWW::ORCID::API::v2_0).
+
+Arguments to new:
+
+## `client_id`
+
+Your ORCID client id (required).
+
+## `client_secret`
+
+Your ORCID client secret (required).
+
+## `version`
+
+The only possible value at the moment is `"2.0"` which will load [WWW::ORCID::API::v2\_0](https://metacpan.org/pod/WWW::ORCID::API::v2_0) or [WWW::ORCID::API::v2\_0\_public](https://metacpan.org/pod/WWW::ORCID::API::v2_0_public).
+
+## `sandbox`
+
+The client will use the API sandbox if set to `1`.
+
+## `public`
+
+The client will use the [ORCID public API](https://pub.sandbox.orcid.org/v2.0)
+if set to `1`. Default is the
+[ORCID member API](https://pub.sandbox.orcid.org/v2.0).
+
+## `transport`
+
+Specify the HTTP client to use. Possible values are [LWP](https://metacpan.org/pod/LWP) or [HTTP::Tiny](https://metacpan.org/pod/HTTP::Tiny).
+Default is [LWP](https://metacpan.org/pod/LWP).
+
+# METHODS
+
+Please refer to the API clients [WWW::ORCID::API::v2\_0](https://metacpan.org/pod/WWW::ORCID::API::v2_0) and [WWW::ORCID::API::v2\_0\_public](https://metacpan.org/pod/WWW::ORCID::API::v2_0_public) for method documentation.
 
 # SEE ALSO
 
-[http://members.orcid.org/api](http://members.orcid.org/api)
+[https://api.orcid.org/v2.0/#/Member\_API\_v2.0](https://api.orcid.org/v2.0/#/Member_API_v2.0)
 
 # AUTHOR
 
