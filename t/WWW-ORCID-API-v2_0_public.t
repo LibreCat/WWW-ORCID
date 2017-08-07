@@ -7,7 +7,7 @@ use Test::Exception;
 
 my $pkg;
 BEGIN {
-    $pkg = 'WWW::ORCID::API';
+    $pkg = 'WWW::ORCID::API::v2_0_public';
     use_ok $pkg;
 }
 

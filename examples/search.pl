@@ -18,6 +18,7 @@ GetOptions(
 
 my $client = WWW::ORCID->new(
     version => '2.0',
+    public => 1,
     sandbox => 1,
     client_id => $ENV{ORCID_CLIENT_ID},
     client_secret => $ENV{ORCID_CLIENT_SECRET},

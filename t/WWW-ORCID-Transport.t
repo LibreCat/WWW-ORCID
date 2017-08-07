@@ -10,6 +10,5 @@ BEGIN {
     $pkg = 'WWW::ORCID::Transport';
     use_ok $pkg;
 }
-require_ok $pkg;
 
 done_testing;

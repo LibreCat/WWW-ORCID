@@ -5,14 +5,12 @@ use warnings;
 
 our $VERSION = 0.02;
 
-use URI ();
+use URI      ();
 use Log::Any ();
 use Moo::Role;
 use namespace::clean;
 
-has log => (
-    is => 'lazy',
-);
+has log => (is => 'lazy',);
 
 sub _build_log {
     Log::Any->get_logger;

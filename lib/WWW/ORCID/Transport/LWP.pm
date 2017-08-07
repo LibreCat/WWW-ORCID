@@ -11,12 +11,8 @@ use namespace::clean;
 
 with 'WWW::ORCID::Transport';
 
-has _client => (
-    is => 'ro',
-    init_arg => 0,
-    lazy => 1,
-    builder => '_build_client',
-);
+has _client =>
+    (is => 'ro', init_arg => 0, lazy => 1, builder => '_build_client',);
 
 sub _build_client {
     LWP::UserAgent->new;

@@ -11,12 +11,8 @@ use namespace::clean;
 
 with 'WWW::ORCID::Transport';
 
-has _client => (
-    is => 'ro',
-    init_arg => 0,
-    lazy => 1,
-    builder => '_build_client',
-);
+has _client =>
+    (is => 'ro', init_arg => 0, lazy => 1, builder => '_build_client',);
 
 sub _build_client {
     HTTP::Tiny->new;
@@ -39,7 +35,8 @@ sub post_form {
 
 sub post {
     my ($self, $url, $body, $headers) = @_;
-    my $res = $self->_client->post($url, {content => $body, headers => $headers});
+    my $res
+        = $self->_client->post($url, {content => $body, headers => $headers});
     [$res->{status}, $res->{headers}, $res->{content}];
 }
 

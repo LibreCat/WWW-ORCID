@@ -27,5 +27,4 @@ for my $method (qw(get post_form post put delete)) {
     };
 }
 
-
 1;

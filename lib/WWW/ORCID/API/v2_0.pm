@@ -5,209 +5,90 @@ use warnings;
 
 our $VERSION = 0.02;
 
-use utf8;
-use JSON qw(decode_json encode_json);
-use Sub::Quote qw(quote_sub);
 use Moo;
 use namespace::clean;
 
 with 'WWW::ORCID::MemberAPI';
 
-has read_public_token => (is => 'lazy');
-has read_limited_token => (is => 'lazy');
-
-my $OPS = {
-    'group-id-record' => {get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'activities' => {orcid => 1, get => 1},
-    'address' => {orcid => 1, get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'biography' => {orcid => 1, get => 1},
-    'education' => {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'education/summary' => {orcid => 1, get_pc => 1},
-    'educations' => {orcid => 1, get => 1},
-    'email' => {orcid => 1, get => 1},
-    'employment' => {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'employment/summary' => {orcid => 1, get_pc => 1},
-    'employments' => {orcid => 1, get => 1},
-    'external-identifiers' => {orcid => 1, get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'funding' => {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'funding/summary' => {orcid => 1, get_pc => 1},
-    'fundings' => {orcid => 1, get => 1},
-    'keywords' => {orcid => 1, get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'other-names' => {orcid => 1, get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'peer-review' => {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'peer-review/summary' => {orcid => 1, get_pc => 1},
-    'peer-reviews' => {orcid => 1, get => 1},
-    'person' => {orcid => 1, get => 1},
-    'personal-details' => {orcid => 1, get => 1},
-    'researcher-urls' => {orcid => 1, get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'work' => {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
-    'work/summary' => {orcid => 1, get_pc => 1},
-    'works' => {orcid => 1, get => 1, get_pc_bulk => 1},
-};
-
 sub ops {
-    $OPS;
+    +{
+        'group-id-record' =>
+            {get => 1, add => 1, delete => 1, get_pc => 1, update => 1},
+        'activities' => {orcid => 1, get => 1},
+        'address'    => {
+            orcid  => 1,
+            get    => 1,
+            add    => 1,
+            delete => 1,
+            get_pc => 1,
+            update => 1
+        },
+        'biography' => {orcid => 1, get => 1},
+        'education' =>
+            {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
+        'education/summary' => {orcid => 1, get_pc => 1},
+        'educations'        => {orcid => 1, get    => 1},
+        'email'             => {orcid => 1, get    => 1},
+        'employment' =>
+            {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
+        'employment/summary'   => {orcid => 1, get_pc => 1},
+        'employments'          => {orcid => 1, get    => 1},
+        'external-identifiers' => {
+            orcid  => 1,
+            get    => 1,
+            add    => 1,
+            delete => 1,
+            get_pc => 1,
+            update => 1
+        },
+        'funding' =>
+            {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
+        'funding/summary' => {orcid => 1, get_pc => 1},
+        'fundings'        => {orcid => 1, get    => 1},
+        'keywords'        => {
+            orcid  => 1,
+            get    => 1,
+            add    => 1,
+            delete => 1,
+            get_pc => 1,
+            update => 1
+        },
+        'other-names' => {
+            orcid  => 1,
+            get    => 1,
+            add    => 1,
+            delete => 1,
+            get_pc => 1,
+            update => 1
+        },
+        'peer-review' =>
+            {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
+        'peer-review/summary' => {orcid => 1, get_pc => 1},
+        'peer-reviews'        => {orcid => 1, get    => 1},
+        'person'              => {orcid => 1, get    => 1},
+        'personal-details'    => {orcid => 1, get    => 1},
+        'researcher-urls'     => {
+            orcid  => 1,
+            get    => 1,
+            add    => 1,
+            delete => 1,
+            get_pc => 1,
+            update => 1
+        },
+        'work' =>
+            {orcid => 1, add => 1, delete => 1, get_pc => 1, update => 1},
+        'work/summary' => {orcid => 1, get_pc => 1},
+        'works'        => {orcid => 1, get    => 1, get_pc_bulk => 1},
+    };
 }
 
 sub _build_api_url {
-    $_[0]->sandbox ? 'https://api.sandbox.orcid.org/v2.0'
-                   : 'https://api.orcid.org/v2.0';
+    $_[0]->sandbox
+        ? 'https://api.sandbox.orcid.org/v2.0'
+        : 'https://api.orcid.org/v2.0';
 }
 
-sub _build_read_public_token {
-    $_[0]->access_token(grant_type => 'client_credentials', scope => '/read-public');
-}
-
-sub _build_read_limited_token {
-    $_[0]->access_token(grant_type => 'client_credentials', scope => '/read-limited');
-}
-
-sub _url {
-    my ($host, $path, $opts) = @_;
-    $path = join('/', @$path) if ref $path;
-    $path =~ s|_summary$|/summary|;
-    $path =~ s|_|-|g;
-    if (defined(my $orcid = $opts->{orcid})) {
-        $path = "$orcid/$path";
-    }
-    if (defined(my $put_code = $opts->{put_code})) {
-        $put_code = join(',', @$put_code) if ref $put_code;
-        $path = "$path/$put_code";
-    }
-    join('/', $host, $path);
-}
-
-sub _headers {
-    my ($opts, $add_accept, $add_content_type) = @_;
-    my $token = $opts->{token};
-    $token = $token->{access_token} if ref $token;
-    my $headers = {
-        'Authorization' => "Bearer $token",
-    };
-    if ($add_accept) {
-        $headers->{'Accept'} = 'application/vnd.orcid+json';
-    }
-    if ($add_content_type) {
-        $headers->{'Content-Type'} = 'application/vnd.orcid+json';
-    }
-    $headers;
-}
-
-sub _clean {
-    my ($opts) = @_;
-    delete $opts->{$_} for qw(orcid token put_code);
-    $opts;
-}
-
-sub client_details {
-    my $self = shift;
-    $self->_clear_last_error;
-    my $opts = ref $_[0] ? $_[0] : {@_};
-    $opts->{token} ||= $self->read_public_token;
-    my $url = join('/', $self->api_url, 'client', $self->client_id);
-    my $res = $self->_t->get($url, undef, _headers($opts, 1, 0));
-    if ($res->[0] eq '200') {
-        return decode_json($res->[2]);
-    }
-    $self->_set_last_error($res);
-    return;
-}
-
-sub get {
-    my $self = shift;
-    $self->_clear_last_error;
-    my $path = shift;
-    my $opts = ref $_[0] ? $_[0] : {@_};
-    $opts->{token} ||= $self->read_public_token;
-    my $url = _url($self->api_url, $path, $opts);
-    my $headers = _headers($opts, 1, 0);
-    my $res = $self->_t->get($url, _clean($opts), $headers);
-    if ($res->[0] eq '200') {
-        return decode_json($res->[2]);
-    }
-    $self->_set_last_error($res);
-    return;
-}
-
-sub add {
-    my $self = shift;
-    $self->_clear_last_error;
-    my $path = shift;
-    my $data = shift;
-    my $opts = ref $_[0] ? $_[0] : {@_};
-    my $body = encode_json($data);
-    my $url = _url($self->api_url, $path, $opts);
-    my $res = $self->_t->post($url, $body, _headers($opts, 0, 1));
-    if ($res->[0] eq '201') {
-        my $loc = $res->[1]->{location};
-        my ($put_code) = $loc =~ m|([^/]+)$|;
-        return $put_code;
-    }
-    $self->_set_last_error($res);
-    return;
-}
-
-sub update {
-    my $self = shift;
-    $self->_clear_last_error;
-    my $path = shift;
-    my $data = shift;
-    my $opts = ref $_[0] ? $_[0] : {@_};
-    # put code needs to be in both path and body
-    $data->{'put-code'} ||= $opts->{put_code} if $opts->{put_code};
-    $opts->{put_code} ||= $data->{'put-code'} if $data->{'put-code'};
-    my $body = encode_json($data);
-    my $url = _url($self->api_url, $path, $opts);
-    my $res = $self->_t->put($url, $body, _headers($opts, 1, 1));
-    if ($res->[0] eq '200') {
-        return decode_json($res->[2]);
-    }
-    $self->_set_last_error($res);
-    return;
-}
-
-sub delete {
-    my $self = shift;
-    $self->_clear_last_error;
-    my $path = shift;
-    my $opts = ref $_[0] ? $_[0] : {@_};
-    my $url = _url($self->api_url, $path, $opts);
-    my $res = $self->_t->delete($url, undef, _headers($opts, 1));
-    if ($res->[0] eq '204') {
-        return 1;
-    }
-    $self->_set_last_error($res);
-    return;
-}
-
-for my $op (sort keys %$OPS) {
-    my $spec = $OPS->{$op};
-    my $pkg = __PACKAGE__;
-    my $sym = $op;
-    $sym =~ s|[-/]|_|g;
-
-    if ($spec->{get} || $spec->{get_pc} || $spec->{get_pc_bulk}) {
-        quote_sub("${pkg}::${sym}",
-            qq|shift->get('${op}', \@_)|);
-    }
-
-    if ($spec->{add}) {
-        quote_sub("${pkg}::add_${sym}",
-            qq|shift->add('${op}', \@_)|);
-    }
-
-    if ($spec->{update}) {
-        quote_sub("${pkg}::update_${sym}",
-            qq|shift->update('${op}', \@_)|);
-    }
-
-    if ($spec->{delete}) {
-        quote_sub("${pkg}::delete_${sym}",
-            qq|shift->delete('${op}', \@_)|);
-    }
-}
-
-1;
+__PACKAGE__->install_helper_methods;
 
 __END__
 
@@ -215,6 +96,582 @@ __END__
 
 =head1 NAME
 
-WWW::ORCID::API::v2_0 - A client for the ORCID 2.0 API
+WWW::ORCID::API::v2_0 - A client for the ORCID 2.0 member API
+
+=head1 CREATING A NEW INSTANCE
+
+The C<new> method returns a new L<2.0 member API client|WWW::ORCID::API::v2_0>.
+
+Arguments to new:
+
+=head2 C<client_id>
+
+Your ORCID client id (required).
+
+=head2 C<client_secret>
+
+Your ORCID client secret (required).
+
+=head2 C<sandbox>
+
+The client will talk to the L<ORCID sandbox API|https://api.sandbox.orcid.org/v2.0> if set to C<1>.
+
+=head2 C<transport>
+
+Specify the HTTP client to use. Possible values are L<LWP> or L<HTTP::Tiny>. Default is L<LWP>.
+
+=head1 METHODS
+
+=head2 C<client_id>
+
+Returns the ORCID client id used by the client.
+
+=head2 C<client_secret>
+
+Returns the ORCID client secret used by the client.
+
+=head2 C<sandbox>
+
+Returns C<1> if the client is using the sandbox API, C<0> otherwise.
+
+=head2 C<transport>
+
+Returns what HTTP transport the client is using.
+
+=head2 C<api_url>
+
+Returns the base API url used by the client.
+
+=head2 C<oauth_url>
+
+Returns the base OAuth url used by the client.
+
+=head2 C<access_token>
+
+Request a new access token.
+
+    my $token = $client->access_token(
+        grant_type => 'client_credentials',
+        scope => '/read-public',
+    );
+
+=head2 C<authorize_url>
+
+Returns an authorization url for 3-legged OAuth requests.
+
+    # in your web application
+    redirect($client->authorize_url(
+        show_login => 'true',
+        scope => '/person/update',
+        response_type => 'code',
+        redirect_uri => 'http://your.callback/url',
+    ));
+
+See the C</authorize> and C</authorized> routes in the included playground
+application for an example.
+
+=head2 C<read_public_token>
+
+Return an access token with scope C</read-public>.
+
+=head2 C<read_limited_token>
+
+Return an access token with scope C</read-limited>.
+
+=head2 C<client>
+
+Get details about the current client.
+
+=head2 C<search>
+
+    my $hits = $client->search(q => "johnson");
+
+=head2 C<activities>
+
+    my $rec = $client->activities(token => $token);
+
+Equivalent to:
+
+    $client->get('activities', %opts)
+
+=head2 C<address>
+
+    my $recs = $client->address(token => $token);
+    my $rec = $client->address(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('address', %opts)
+
+=head2 C<add_address>
+
+    $client->add_address($data, token => $token);
+
+Equivalent to:
+
+    $client->add('address', $data, %opts)
+
+=head2 C<update_address>
+
+    $client->update_address($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('address', $data, %opts)
+
+=head2 C<delete_address>
+
+    my $ok = $client->delete_address(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('address', %opts)
+
+=head2 C<biography>
+
+    my $rec = $client->biography(token => $token);
+
+Equivalent to:
+
+    $client->get('biography', %opts)
+
+=head2 C<education>
+
+    my $rec = $client->education(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('education', %opts)
+
+=head2 C<add_education>
+
+    $client->add_education($data, token => $token);
+
+Equivalent to:
+
+    $client->add('education', $data, %opts)
+
+=head2 C<update_education>
+
+    $client->update_education($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('education', $data, %opts)
+
+=head2 C<delete_education>
+
+    my $ok = $client->delete_education(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('education', %opts)
+
+=head2 C<education_summary>
+
+    my $rec = $client->education_summary(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('education/summary', %opts)
+
+=head2 C<educations>
+
+    my $rec = $client->educations(token => $token);
+
+Equivalent to:
+
+    $client->get('educations', %opts)
+
+=head2 C<email>
+
+    my $rec = $client->email(token => $token);
+
+Equivalent to:
+
+    $client->get('email', %opts)
+
+=head2 C<employment>
+
+    my $rec = $client->employment(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('employment', %opts)
+
+=head2 C<add_employment>
+
+    $client->add_employment($data, token => $token);
+
+Equivalent to:
+
+    $client->add('employment', $data, %opts)
+
+=head2 C<update_employment>
+
+    $client->update_employment($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('employment', $data, %opts)
+
+=head2 C<delete_employment>
+
+    my $ok = $client->delete_employment(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('employment', %opts)
+
+=head2 C<employment_summary>
+
+    my $rec = $client->employment_summary(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('employment/summary', %opts)
+
+=head2 C<employments>
+
+    my $rec = $client->employments(token => $token);
+
+Equivalent to:
+
+    $client->get('employments', %opts)
+
+=head2 C<external_identifiers>
+
+    my $recs = $client->external_identifiers(token => $token);
+    my $rec = $client->external_identifiers(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('external-identifiers', %opts)
+
+=head2 C<add_external_identifiers>
+
+    $client->add_external_identifiers($data, token => $token);
+
+Equivalent to:
+
+    $client->add('external-identifiers', $data, %opts)
+
+=head2 C<update_external_identifiers>
+
+    $client->update_external_identifiers($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('external-identifiers', $data, %opts)
+
+=head2 C<delete_external_identifiers>
+
+    my $ok = $client->delete_external_identifiers(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('external-identifiers', %opts)
+
+=head2 C<funding>
+
+    my $rec = $client->funding(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('funding', %opts)
+
+=head2 C<add_funding>
+
+    $client->add_funding($data, token => $token);
+
+Equivalent to:
+
+    $client->add('funding', $data, %opts)
+
+=head2 C<update_funding>
+
+    $client->update_funding($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('funding', $data, %opts)
+
+=head2 C<delete_funding>
+
+    my $ok = $client->delete_funding(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('funding', %opts)
+
+=head2 C<funding_summary>
+
+    my $rec = $client->funding_summary(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('funding/summary', %opts)
+
+=head2 C<fundings>
+
+    my $rec = $client->fundings(token => $token);
+
+Equivalent to:
+
+    $client->get('fundings', %opts)
+
+=head2 C<group_id_record>
+
+    my $recs = $client->group_id_record(token => $token);
+    my $rec = $client->group_id_record(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('group-id-record', %opts)
+
+=head2 C<add_group_id_record>
+
+    $client->add_group_id_record($data, token => $token);
+
+Equivalent to:
+
+    $client->add('group-id-record', $data, %opts)
+
+=head2 C<update_group_id_record>
+
+    $client->update_group_id_record($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('group-id-record', $data, %opts)
+
+=head2 C<delete_group_id_record>
+
+    my $ok = $client->delete_group_id_record(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('group-id-record', %opts)
+
+=head2 C<keywords>
+
+    my $recs = $client->keywords(token => $token);
+    my $rec = $client->keywords(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('keywords', %opts)
+
+=head2 C<add_keywords>
+
+    $client->add_keywords($data, token => $token);
+
+Equivalent to:
+
+    $client->add('keywords', $data, %opts)
+
+=head2 C<update_keywords>
+
+    $client->update_keywords($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('keywords', $data, %opts)
+
+=head2 C<delete_keywords>
+
+    my $ok = $client->delete_keywords(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('keywords', %opts)
+
+=head2 C<other_names>
+
+    my $recs = $client->other_names(token => $token);
+    my $rec = $client->other_names(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('other-names', %opts)
+
+=head2 C<add_other_names>
+
+    $client->add_other_names($data, token => $token);
+
+Equivalent to:
+
+    $client->add('other-names', $data, %opts)
+
+=head2 C<update_other_names>
+
+    $client->update_other_names($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('other-names', $data, %opts)
+
+=head2 C<delete_other_names>
+
+    my $ok = $client->delete_other_names(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('other-names', %opts)
+
+=head2 C<peer_review>
+
+    my $rec = $client->peer_review(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('peer-review', %opts)
+
+=head2 C<add_peer_review>
+
+    $client->add_peer_review($data, token => $token);
+
+Equivalent to:
+
+    $client->add('peer-review', $data, %opts)
+
+=head2 C<update_peer_review>
+
+    $client->update_peer_review($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('peer-review', $data, %opts)
+
+=head2 C<delete_peer_review>
+
+    my $ok = $client->delete_peer_review(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('peer-review', %opts)
+
+=head2 C<peer_review_summary>
+
+    my $rec = $client->peer_review_summary(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('peer-review/summary', %opts)
+
+=head2 C<peer_reviews>
+
+    my $rec = $client->peer_reviews(token => $token);
+
+Equivalent to:
+
+    $client->get('peer-reviews', %opts)
+
+=head2 C<person>
+
+    my $rec = $client->person(token => $token);
+
+Equivalent to:
+
+    $client->get('person', %opts)
+
+=head2 C<personal_details>
+
+    my $rec = $client->personal_details(token => $token);
+
+Equivalent to:
+
+    $client->get('personal-details', %opts)
+
+=head2 C<researcher_urls>
+
+    my $recs = $client->researcher_urls(token => $token);
+    my $rec = $client->researcher_urls(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('researcher-urls', %opts)
+
+=head2 C<add_researcher_urls>
+
+    $client->add_researcher_urls($data, token => $token);
+
+Equivalent to:
+
+    $client->add('researcher-urls', $data, %opts)
+
+=head2 C<update_researcher_urls>
+
+    $client->update_researcher_urls($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('researcher-urls', $data, %opts)
+
+=head2 C<delete_researcher_urls>
+
+    my $ok = $client->delete_researcher_urls(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('researcher-urls', %opts)
+
+=head2 C<work>
+
+    my $rec = $client->work(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('work', %opts)
+
+=head2 C<add_work>
+
+    $client->add_work($data, token => $token);
+
+Equivalent to:
+
+    $client->add('work', $data, %opts)
+
+=head2 C<update_work>
+
+    $client->update_work($data, token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->update('work', $data, %opts)
+
+=head2 C<delete_work>
+
+    my $ok = $client->delete_work(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->delete('work', %opts)
+
+=head2 C<work_summary>
+
+    my $rec = $client->work_summary(token => $token, put_code => '123');
+
+Equivalent to:
+
+    $client->get('work/summary', %opts)
+
+=head2 C<works>
+
+    my $recs = $client->works(token => $token);
+    my $recs = $client->works(token => $token, put_code => ['123', '456']);
+
+Equivalent to:
+
+    $client->get('works', %opts)
+
+=head2 C<last_error>
+
+Returns the last error returned by the ORCID API, if any.
+
+=head2 C<log>
+
+Returns the L<Log::Any> logger.
 
 =cut
+

@@ -10,6 +10,5 @@ BEGIN {
     $pkg = 'WWW::ORCID';
     use_ok $pkg;
 }
-require_ok $pkg;
 
 done_testing;
