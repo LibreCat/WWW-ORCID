@@ -52,7 +52,6 @@
             "Moo" : "1.000008",
             "Sub::Quote" : "0",
             "URI" : "0",
-            "XML::Writer" : "0",
             "namespace::clean" : "0"
          }
       },
@@ -65,7 +64,7 @@
          }
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/LibreCat/WWW-ORCID/issues"
@@ -77,9 +76,11 @@
          "web" : "https://github.com/LibreCat/WWW-ORCID"
       }
    },
-   "version" : "0.0201_01",
+   "version" : "0.0201",
    "x_contributors" : [
       "jjatria <jjatria@gmail.com>",
+      "Mohammad S Anwar <mohammad.anwar@yahoo.com>",
+      "Nicolas Steenlant <nicolas.steenlant@gmail.com>",
       "Nicolas Steenlant <nicolas.steenlant@ugent.be>",
       "Patrick Hochstenbach <patrick.hochstenbach@ugent.be>",
       "Vitali Peil <vitali.peil@uni-bielefeld.de>"
