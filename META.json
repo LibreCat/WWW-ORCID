@@ -65,7 +65,7 @@
          }
       }
    },
-   "release_status" : "stable",
+   "release_status" : "testing",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/LibreCat/WWW-ORCID/issues"
@@ -77,7 +77,7 @@
          "web" : "https://github.com/LibreCat/WWW-ORCID"
       }
    },
-   "version" : "0.0201",
+   "version" : "0.0201_01",
    "x_contributors" : [
       "jjatria <jjatria@gmail.com>",
       "Nicolas Steenlant <nicolas.steenlant@ugent.be>",

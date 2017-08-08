@@ -1,8 +1,6 @@
 Revision history for WWW-ORCID
 
 {{$NEXT}}
-
-0.02_01  2017-08-07 15:34:58 CEST
   - support for the 2.0 API
   - library API reorganization and cleanup
 
