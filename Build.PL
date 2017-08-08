@@ -27,6 +27,7 @@ my %module_build_args = (
   "recursive_test_files" => 1,
   "requires" => {
     "Class::Load" => 0,
+    "HTTP::Tiny" => 0,
     "JSON" => "2.51",
     "LWP::UserAgent" => 0,
     "Moo" => "1.000008",
