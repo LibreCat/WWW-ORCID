@@ -1,3 +1,6 @@
+.tidyall.d
+cover_db
+examples
 !.gitignore
 .DS_Store
 *.swp
