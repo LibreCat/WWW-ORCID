@@ -1,6 +1,8 @@
 Revision history for WWW-ORCID
 
 {{$NEXT}}
+
+0.03_01  2017-08-08 11:22:21 CEST
   - support for the 2.0 API
   - library API reorganization and cleanup
   - add missing dependency on HTTP::Tiny
