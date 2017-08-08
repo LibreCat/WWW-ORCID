@@ -1,6 +1,6 @@
-.tidyall.d
+examples/sandbox/sessions/*.yml
 cover_db
-examples
+.tidyall.d
 !.gitignore
 .DS_Store
 *.swp
@@ -11,9 +11,10 @@ Build
 LICENSE
 Makefile.PL
 MANIFEST*
-META.*
 MYMETA.*
 WWW-ORCID-*
 !*.t
 cpanfile.snapshot
 local
+example/sessions/*
+!example/sessions/.gitkeep

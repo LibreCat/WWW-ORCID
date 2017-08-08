@@ -1,0 +1,12 @@
+--- !!perl/hash:Dancer::Session::YAML
+_flash: {}
+id: 654197276621137056762773887269090533
+tokens:
+  0000-0002-0902-4397:
+    access_token: fc3844ae-3cd8-4347-b754-d6e1fb6a705f
+    expires_in: 631138518
+    name: Nicolas Steenlant
+    orcid: 0000-0002-0902-4397
+    refresh_token: f338a9f8-4427-43c9-b95a-e6c81274b5bb
+    scope: /activities/update /person/update
+    token_type: bearer

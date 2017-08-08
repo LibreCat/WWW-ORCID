@@ -6,10 +6,10 @@ use Test::More;
 use Test::Exception;
 
 my $pkg;
+
 BEGIN {
-    $pkg = 'WWW::ORCID::API::Common';
+    $pkg = 'WWW::ORCID::Transport::HTTP::Tiny';
     use_ok $pkg;
 }
-require_ok $pkg;
 
-done_testing 2;
+done_testing;
