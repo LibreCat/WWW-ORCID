@@ -1,3 +1,4 @@
+examples/sandbox/sessions/*.yml
 cover_db
 .tidyall.d
 !.gitignore
