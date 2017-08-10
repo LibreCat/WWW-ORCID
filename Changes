@@ -1,6 +1,8 @@
 Revision history for WWW-ORCID
 
 {{$NEXT}}
+
+0.03_02  2017-08-10 09:31:11 CEST
   - add missing dependency on Log::Any
 
 0.03_01  2017-08-08 11:22:21 CEST

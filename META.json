@@ -49,6 +49,7 @@
             "HTTP::Tiny" : "0",
             "JSON" : "2.51",
             "LWP::UserAgent" : "0",
+            "Log::Any" : "0",
             "Moo" : "1.000008",
             "Sub::Quote" : "0",
             "URI" : "0",
@@ -76,7 +77,7 @@
          "web" : "https://github.com/LibreCat/WWW-ORCID"
       }
    },
-   "version" : "0.03_01",
+   "version" : "0.03_02",
    "x_contributors" : [
       "jjatria <jjatria@gmail.com>",
       "Mohammad S Anwar <mohammad.anwar@yahoo.com>",

@@ -18,7 +18,7 @@ my %module_build_args = (
     "Patrick Hochstenbach C<< <patrick.hochstenbach at ugent.be> >>"
   ],
   "dist_name" => "WWW-ORCID",
-  "dist_version" => "0.03_01",
+  "dist_version" => "0.03_02",
   "license" => "perl",
   "module_name" => "WWW::ORCID",
   "recommends" => {
@@ -30,6 +30,7 @@ my %module_build_args = (
     "HTTP::Tiny" => 0,
     "JSON" => "2.51",
     "LWP::UserAgent" => 0,
+    "Log::Any" => 0,
     "Moo" => "1.000008",
     "Sub::Quote" => 0,
     "URI" => 0,
