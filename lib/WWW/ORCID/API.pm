@@ -69,6 +69,13 @@ sub authorize_url {
     $self->_param_url(join('/', $self->oauth_url, 'authorize'), $opts);
 }
 
+sub record_url {
+    my ($self, $orcid) = @_;
+    $self->sandbox ?
+        "http://sandbox.orcid.org/$orcid" :
+        "http://orcid.org/$orcid";
+}
+
 sub _build_transport {
     'LWP';
 }

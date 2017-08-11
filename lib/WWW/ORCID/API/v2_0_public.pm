@@ -116,7 +116,7 @@ Request a new access token.
 
 =head2 C<authorize_url>
 
-Returns an authorization url for 3-legged OAuth requests.
+Helper that returns an authorization url for 3-legged OAuth requests.
 
     # in your web application
     redirect($client->authorize_url(
@@ -129,6 +129,16 @@ Returns an authorization url for 3-legged OAuth requests.
 See the C</authorize> and C</authorized> routes in the included playground
 application for an example.
 
+=head2 C<record_url>
+
+Helper that returns an orcid record url.
+
+    $client->record_url('0000-0003-4791-9455')
+    # returns
+    # http://orcid.org/0000-0003-4791-9455
+    # or
+    # http://sandbox.orcid.org/0000-0003-4791-9455
+
 =head2 C<read_public_token>
 
 Return an access token with scope C</read-public>.
@@ -140,10 +150,9 @@ Get details about the current client.
 =head2 C<search>
 
     my $hits = $client->search(q => "johnson");
-
 =head2 C<activities>
 
-    my $rec = $client->activities(token => $token);
+    my $rec = $client->activities(token => $token, orcid => $orcid);
 
 Equivalent to:
 
@@ -151,8 +160,8 @@ Equivalent to:
 
 =head2 C<address>
 
-    my $recs = $client->address(token => $token);
-    my $rec = $client->address(token => $token, put_code => '123');
+    my $recs = $client->address(token => $token, orcid => $orcid);
+    my $rec = $client->address(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -160,7 +169,7 @@ Equivalent to:
 
 =head2 C<biography>
 
-    my $rec = $client->biography(token => $token);
+    my $rec = $client->biography(token => $token, orcid => $orcid);
 
 Equivalent to:
 
@@ -168,7 +177,7 @@ Equivalent to:
 
 =head2 C<education>
 
-    my $rec = $client->education(token => $token, put_code => '123');
+    my $rec = $client->education(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -176,7 +185,7 @@ Equivalent to:
 
 =head2 C<delete_education>
 
-    my $ok = $client->delete_education(token => $token, put_code => '123');
+    my $ok = $client->delete_education(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -184,7 +193,7 @@ Equivalent to:
 
 =head2 C<education_summary>
 
-    my $rec = $client->education_summary(token => $token, put_code => '123');
+    my $rec = $client->education_summary(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -192,7 +201,7 @@ Equivalent to:
 
 =head2 C<educations>
 
-    my $rec = $client->educations(token => $token);
+    my $rec = $client->educations(token => $token, orcid => $orcid);
 
 Equivalent to:
 
@@ -200,7 +209,7 @@ Equivalent to:
 
 =head2 C<email>
 
-    my $rec = $client->email(token => $token);
+    my $rec = $client->email(token => $token, orcid => $orcid);
 
 Equivalent to:
 
@@ -208,7 +217,7 @@ Equivalent to:
 
 =head2 C<employment>
 
-    my $rec = $client->employment(token => $token, put_code => '123');
+    my $rec = $client->employment(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -216,7 +225,7 @@ Equivalent to:
 
 =head2 C<employment_summary>
 
-    my $rec = $client->employment_summary(token => $token, put_code => '123');
+    my $rec = $client->employment_summary(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -224,7 +233,7 @@ Equivalent to:
 
 =head2 C<employments>
 
-    my $rec = $client->employments(token => $token);
+    my $rec = $client->employments(token => $token, orcid => $orcid);
 
 Equivalent to:
 
@@ -232,8 +241,8 @@ Equivalent to:
 
 =head2 C<external_identifiers>
 
-    my $recs = $client->external_identifiers(token => $token);
-    my $rec = $client->external_identifiers(token => $token, put_code => '123');
+    my $recs = $client->external_identifiers(token => $token, orcid => $orcid);
+    my $rec = $client->external_identifiers(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -241,7 +250,7 @@ Equivalent to:
 
 =head2 C<funding>
 
-    my $rec = $client->funding(token => $token, put_code => '123');
+    my $rec = $client->funding(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -249,7 +258,7 @@ Equivalent to:
 
 =head2 C<funding_summary>
 
-    my $rec = $client->funding_summary(token => $token, put_code => '123');
+    my $rec = $client->funding_summary(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -257,7 +266,7 @@ Equivalent to:
 
 =head2 C<fundings>
 
-    my $rec = $client->fundings(token => $token);
+    my $rec = $client->fundings(token => $token, orcid => $orcid);
 
 Equivalent to:
 
@@ -265,8 +274,8 @@ Equivalent to:
 
 =head2 C<keywords>
 
-    my $recs = $client->keywords(token => $token);
-    my $rec = $client->keywords(token => $token, put_code => '123');
+    my $recs = $client->keywords(token => $token, orcid => $orcid);
+    my $rec = $client->keywords(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -274,8 +283,8 @@ Equivalent to:
 
 =head2 C<other_names>
 
-    my $recs = $client->other_names(token => $token);
-    my $rec = $client->other_names(token => $token, put_code => '123');
+    my $recs = $client->other_names(token => $token, orcid => $orcid);
+    my $rec = $client->other_names(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -283,7 +292,7 @@ Equivalent to:
 
 =head2 C<peer_review>
 
-    my $rec = $client->peer_review(token => $token, put_code => '123');
+    my $rec = $client->peer_review(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -291,7 +300,7 @@ Equivalent to:
 
 =head2 C<peer_review_summary>
 
-    my $rec = $client->peer_review_summary(token => $token, put_code => '123');
+    my $rec = $client->peer_review_summary(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -299,7 +308,7 @@ Equivalent to:
 
 =head2 C<peer_reviews>
 
-    my $rec = $client->peer_reviews(token => $token);
+    my $rec = $client->peer_reviews(token => $token, orcid => $orcid);
 
 Equivalent to:
 
@@ -307,7 +316,7 @@ Equivalent to:
 
 =head2 C<person>
 
-    my $rec = $client->person(token => $token);
+    my $rec = $client->person(token => $token, orcid => $orcid);
 
 Equivalent to:
 
@@ -315,7 +324,7 @@ Equivalent to:
 
 =head2 C<personal_details>
 
-    my $rec = $client->personal_details(token => $token);
+    my $rec = $client->personal_details(token => $token, orcid => $orcid);
 
 Equivalent to:
 
@@ -323,8 +332,8 @@ Equivalent to:
 
 =head2 C<researcher_urls>
 
-    my $recs = $client->researcher_urls(token => $token);
-    my $rec = $client->researcher_urls(token => $token, put_code => '123');
+    my $recs = $client->researcher_urls(token => $token, orcid => $orcid);
+    my $rec = $client->researcher_urls(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -332,7 +341,7 @@ Equivalent to:
 
 =head2 C<work>
 
-    my $rec = $client->work(token => $token, put_code => '123');
+    my $rec = $client->work(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -340,7 +349,7 @@ Equivalent to:
 
 =head2 C<work_summary>
 
-    my $rec = $client->work_summary(token => $token, put_code => '123');
+    my $rec = $client->work_summary(token => $token, orcid => $orcid, put_code => '123');
 
 Equivalent to:
 
@@ -348,8 +357,8 @@ Equivalent to:
 
 =head2 C<works>
 
-    my $recs = $client->works(token => $token);
-    my $recs = $client->works(token => $token, put_code => ['123', '456']);
+    my $recs = $client->works(token => $token, orcid => $orcid);
+    my $recs = $client->works(token => $token, orcid => $orcid, put_code => ['123', '456']);
 
 Equivalent to:
 

@@ -84,7 +84,7 @@ Request a new access token.
 
 =head2 C<authorize_url>
 
-Returns an authorization url for 3-legged OAuth requests.
+Helper that returns an authorization url for 3-legged OAuth requests.
 
     # in your web application
     redirect(\$client->authorize_url(
@@ -96,6 +96,16 @@ Returns an authorization url for 3-legged OAuth requests.
 
 See the C</authorize> and C</authorized> routes in the included playground
 application for an example.
+
+=head2 C<record_url>
+
+Helper that returns an orcid record url.
+
+    \$client->record_url('0000-0003-4791-9455')
+    # returns
+    # http://orcid.org/0000-0003-4791-9455
+    # or
+    # http://sandbox.orcid.org/0000-0003-4791-9455
 
 =head2 C<read_public_token>
 
@@ -123,48 +133,52 @@ $pod .= <<EOF if $class->can('search');
     my \$hits = \$client->search(q => "johnson");
 EOF
 
-$pod .= <<EOF;
-
-EOF
+my $token_arg = 'token => $token';
+my $orcid_arg = ', orcid => $orcid';
+my $pc_arg = ", put_code => '123'";
+my $pc_bulk_arg = ", put_code => ['123', '456']";
 
 for my $op (sort keys %$ops) {
     my $spec = $ops->{$op};
     my $sym = $op;
     $sym =~ s|[-/]|_|g;
 
+    my $base_args = $token_arg;
+    $base_args .= $orcid_arg if $spec->{orcid};
+
     if ($spec->{get} || $spec->{get_pc} || $spec->{get_pc_bulk}) {
         $pod .= "=head2 C<${sym}>\n\n";
 
         if ($spec->{get} && ($spec->{get_pc} || $spec->{get_pc_bulk})) {
-            $pod .= "    my \$recs = \$client->${sym}(token => \$token);\n";
+            $pod .= "    my \$recs = \$client->${sym}($base_args);\n";
         }
         elsif ($spec->{get}) {
-            $pod .= "    my \$rec = \$client->${sym}(token => \$token);\n";
+            $pod .= "    my \$rec = \$client->${sym}($base_args);\n";
         }
         if ($spec->{get_pc}) {
-            $pod .= "    my \$rec = \$client->${sym}(token => \$token, put_code => '123');\n";
+            $pod .= "    my \$rec = \$client->${sym}($base_args$pc_arg);\n";
         }
         if ($spec->{get_pc_bulk}) {
-            $pod .= "    my \$recs = \$client->${sym}(token => \$token, put_code => ['123', '456']);\n";
+            $pod .= "    my \$recs = \$client->${sym}($base_args$pc_bulk_arg);\n";
         }
         $pod .= "\nEquivalent to:\n\n    \$client->get('${op}', \%opts)\n\n";
     }
 
     if ($spec->{add}) {
         $pod .= "=head2 C<add_${sym}>\n\n";
-        $pod .= "    \$client->add_${sym}(\$data, token => \$token);\n";
+        $pod .= "    \$client->add_${sym}(\$data, $base_args);\n";
         $pod .= "\nEquivalent to:\n\n    \$client->add('${op}', \$data, \%opts)\n\n";
     }
 
     if ($spec->{update}) {
         $pod .= "=head2 C<update_${sym}>\n\n";
-        $pod .= "    \$client->update_${sym}(\$data, token => \$token, put_code => '123');\n";
+        $pod .= "    \$client->update_${sym}(\$data, $base_args$pc_arg);\n";
         $pod .= "\nEquivalent to:\n\n    \$client->update('${op}', \$data, \%opts)\n\n";
     }
 
     if ($spec->{delete}) {
         $pod .= "=head2 C<delete_${sym}>\n\n";
-        $pod .= "    my \$ok = \$client->delete_${sym}(token => \$token, put_code => '123');\n";
+        $pod .= "    my \$ok = \$client->delete_${sym}($base_args$pc_arg);\n";
         $pod .= "\nEquivalent to:\n\n    \$client->delete('${op}', \%opts)\n\n";
     }
 }
