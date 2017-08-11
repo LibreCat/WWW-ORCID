@@ -1,6 +1,8 @@
 Revision history for WWW-ORCID
 
 {{$NEXT}}
+  - record_url helper method
+  - improve generated pod
 
 0.03_02  2017-08-10 09:31:11 CEST
   - add missing dependency on Log::Any
