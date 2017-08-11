@@ -18,7 +18,7 @@ my %module_build_args = (
     "Patrick Hochstenbach C<< <patrick.hochstenbach at ugent.be> >>"
   ],
   "dist_name" => "WWW-ORCID",
-  "dist_version" => "0.03_02",
+  "dist_version" => "0.03_03",
   "license" => "perl",
   "module_name" => "WWW::ORCID",
   "recommends" => {
