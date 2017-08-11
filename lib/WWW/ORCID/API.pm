@@ -71,9 +71,9 @@ sub authorize_url {
 
 sub record_url {
     my ($self, $orcid) = @_;
-    $self->sandbox ?
-        "http://sandbox.orcid.org/$orcid" :
-        "http://orcid.org/$orcid";
+    $self->sandbox
+        ? "http://sandbox.orcid.org/$orcid"
+        : "http://orcid.org/$orcid";
 }
 
 sub _build_transport {
