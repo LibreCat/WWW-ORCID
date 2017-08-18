@@ -3,7 +3,7 @@ package WWW::ORCID::API::v2_0_public;
 use strict;
 use warnings;
 
-our $VERSION = 0.04;
+our $VERSION = 0.0401;
 
 use utf8;
 use Moo;

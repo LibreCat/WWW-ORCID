@@ -3,7 +3,7 @@ package WWW::ORCID;
 use strict;
 use warnings;
 
-our $VERSION = 0.04;
+our $VERSION = 0.0401;
 
 use Class::Load qw(try_load_class);
 use Carp;
