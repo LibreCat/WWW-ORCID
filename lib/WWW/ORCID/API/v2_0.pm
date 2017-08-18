@@ -3,7 +3,7 @@ package WWW::ORCID::API::v2_0;
 use strict;
 use warnings;
 
-our $VERSION = 0.02_01;
+our $VERSION = 0.04;
 
 use Moo;
 use namespace::clean;

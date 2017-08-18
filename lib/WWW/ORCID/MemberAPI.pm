@@ -3,7 +3,7 @@ package WWW::ORCID::MemberAPI;
 use strict;
 use warnings;
 
-our $VERSION = 0.02_01;
+our $VERSION = 0.04;
 
 use Moo::Role;
 use JSON qw(decode_json encode_json);
