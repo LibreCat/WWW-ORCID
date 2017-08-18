@@ -2,6 +2,7 @@ Revision history for WWW-ORCID
 
 {{$NEXT}}
   - cleanup sandbox example files
+  - fix module versions
 
 0.04  2017-08-18 15:58:45 CEST
   - document client status
