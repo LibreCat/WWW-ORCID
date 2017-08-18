@@ -44,6 +44,12 @@ WWW::ORCID - A client for the ORCID 2.0 API
 
 A client for the ORCID 2.x API.
 
+=head1 STATUS
+
+The client is mostly complete. The 2.0 member API is implemented except C<notification-permission>. The 2.0
+public API is implemented except C<identifiers> and C<status>. The 2.1 member
+API has not yet been implemented.
+
 =head1 CREATING A NEW INSTANCE
 
 The C<new> method returns a new L<2.0 API client|WWW::ORCID::API::v2_0>.

@@ -14,6 +14,12 @@ WWW::ORCID - A client for the ORCID 2.0 API
 
 A client for the ORCID 2.x API.
 
+# STATUS
+
+The client is mostly complete. The 2.0 member API is implemented except `notification-permission`. The 2.0
+public API is implemented except `identifiers` and `status`. The 2.1 member
+API has not yet been implemented.
+
 # CREATING A NEW INSTANCE
 
 The `new` method returns a new [2.0 API client](https://metacpan.org/pod/WWW::ORCID::API::v2_0).
