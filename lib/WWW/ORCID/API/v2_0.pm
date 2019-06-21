@@ -195,6 +195,7 @@ Get details about the current client.
 =head2 C<search>
 
     my $hits = $client->search(q => "johnson");
+
 =head2 C<activities>
 
     my $rec = $client->activities(token => $token, orcid => $orcid);
