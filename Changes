@@ -2,6 +2,9 @@ Revision history for WWW-ORCID
 
 {{$NEXT}}
 
+0.0402  2019-06-21 14:28:13 CEST
+  - fix typo in pod
+
 0.0401  2017-08-18 17:12:12 CEST
   - cleanup sandbox example files
   - fix module versions
