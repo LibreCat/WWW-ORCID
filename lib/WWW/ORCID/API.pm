@@ -18,13 +18,13 @@ requires 'ops';
 requires '_build_api_url';
 
 has sandbox           => (is => 'ro',);
-has client_id         => (is => 'ro', required => 1);
-has client_secret     => (is => 'ro', required => 1);
+has client_id         => (is => 'ro',);
+has client_secret     => (is => 'ro',);
 has api_url           => (is => 'lazy',);
 has oauth_url         => (is => 'lazy');
 has read_public_token => (is => 'lazy');
 has transport         => (is => 'lazy',);
-has last_error => (
+has last_error        => (
     is       => 'rwp',
     init_arg => undef,
     clearer  => '_clear_last_error',
@@ -49,11 +49,13 @@ sub access_token {
     my $self = shift;
     $self->_clear_last_error;
     my $opts = ref $_[0] ? $_[0] : {@_};
-    $opts->{client_id}     = $self->client_id;
-    $opts->{client_secret} = $self->client_secret;
+    my $client_id = $self->client_id;
+    my $client_secret = $self->client_secret;
+    $opts->{client_id}     = $client_id if defined $client_id;
+    $opts->{client_secret} = $client_secret if defined $client_secret;
     my $url = join('/', $self->oauth_url, 'token');
     my $headers = {'Accept' => 'application/json'};
-    my $res = $self->_t->post_form($url, $opts, $headers);
+    my $res     = $self->_t->post_form($url, $opts, $headers);
 
     if ($res->[0] eq '200') {
         return decode_json($res->[2]);
@@ -104,7 +106,7 @@ sub _url {
     }
     if (defined(my $put_code = $opts->{put_code})) {
         $put_code = join(',', @$put_code) if ref $put_code;
-        $path = "$path/$put_code";
+        $path     = "$path/$put_code";
     }
     join('/', $host, $path);
 }
@@ -153,9 +155,9 @@ sub get {
     my $path = shift;
     my $opts = ref $_[0] ? $_[0] : {@_};
     $opts->{token} ||= $self->read_public_token;
-    my $url = _url($self->api_url, $path, $opts);
+    my $url     = _url($self->api_url, $path, $opts);
     my $headers = _headers($opts, 1, 0);
-    my $res = $self->_t->get($url, _clean($opts), $headers);
+    my $res     = $self->_t->get($url, _clean($opts), $headers);
 
     if ($res->[0] eq '200') {
         return decode_json($res->[2]);

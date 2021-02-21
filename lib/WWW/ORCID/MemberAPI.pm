@@ -11,7 +11,9 @@ use namespace::clean;
 
 with 'WWW::ORCID::API';
 
-has read_limited_token => (is => 'lazy');
+has '+client_id'       => (is => 'ro', required => 1);
+has '+client_secret'   => (is => 'ro', required => 1);
+has read_limited_token => (is       => 'lazy');
 
 sub _build_read_limited_token {
     $_[0]->access_token(
